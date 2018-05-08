@@ -86,7 +86,7 @@ class LexicalAnalyzer {
             this.bufferInputStream.reset();
             this.column--;
             token = FindReservedWord();
-        } else if(word.matches("[()+\\-*/.]")) {
+        } else if(word.matches("[()+\\-*/%.]")) {
             this.bufferInputStream.reset();
             this.column--;
             token = FindArithmeticalOperator();
