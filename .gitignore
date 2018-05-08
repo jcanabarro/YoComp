@@ -28,7 +28,6 @@ hs_err_pid*
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff
-.idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/**/dictionaries
 .idea/**/shelf
@@ -75,3 +74,5 @@ fabric.properties
 
 # Editor-based Rest Client
 .idea/httpRequests
+
+.idea/
