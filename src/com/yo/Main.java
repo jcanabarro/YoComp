@@ -9,15 +9,18 @@ public class Main {
     private static String FILENAME;
 
     public static void main(String[] args) {
-        if(args[0].equals("-yo")) {
+        if (args[0].equals("-yo")) {
             FILENAME = args[1];
             File file = new File(FILENAME);
 
-            if(!file.exists()) {
+            if (!file.exists()) {
                 System.out.println("File does not exist!!!");
                 return;
-            } try {
-                List<String> reservedWord = Arrays.asList("yoda", "god");
+            }
+            try {
+                List<String> reservedWord = Arrays.asList("yoint", "yofloat", "yochar", "lag", "sehloiro", "yobool",
+                        "eoq", "trab", "holy", "fon", "yogod", "circo", "soled", "break", "true", "false", "printfi",
+                        "solado", "scanfi");
                 List<String> symbols = Arrays.asList("{", "}");
 
                 LexicalAnalyzer lexical = new LexicalAnalyzer(file, reservedWord, symbols);
