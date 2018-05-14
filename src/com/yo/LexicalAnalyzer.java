@@ -95,6 +95,12 @@ class LexicalAnalyzer {
         Token number = new Token("num", "", this.column, this.row);
         String value = FindPattern("[0-9]");
         resetBuffer();
+        if(readChar() == '.'){
+            value += '.';
+            value += FindPattern("[0-9]");
+        } else {
+            resetBuffer();
+        }
         number.setValue(value);
         return number;
     }
