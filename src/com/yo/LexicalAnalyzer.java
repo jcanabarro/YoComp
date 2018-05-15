@@ -101,11 +101,15 @@ class LexicalAnalyzer {
     private Token FindReservedWord() throws IOException {
         Token reservedWord = new Token("", "", this.column, this.row);
         String value = FindPattern("[a-z]");
+        resetBuffer();
         if (this.reservedWords.contains(value)) {
             reservedWord.setValue(value);
             reservedWord.setAttribute("reserved");
         } else {
-            reservedWord.setError("Nao e uma palavra reservada");
+//            reservedWord.setError("Nao e uma palavra reservada");
+            value = FindPattern("[a-zA-Z]");
+            reservedWord.setAttribute("ID");
+            reservedWord.setValue(value);
         }
         resetBuffer();
         return reservedWord;
