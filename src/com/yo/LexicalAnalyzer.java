@@ -8,15 +8,17 @@ class LexicalAnalyzer {
     private FileInputStream fileInputStream;
     private BufferedInputStream bufferInputStream;
     private int column, row;
-    private List<String> reservedWords, symbols;
+    private List<String> reservedWords, symbols, specialOperators;
 
-    LexicalAnalyzer(File file, List<String> reservedWords, List<String> symbols) throws FileNotFoundException {
+    LexicalAnalyzer(File file, List<String> reservedWords, List<String> symbols, List<String> specialOperators)
+            throws FileNotFoundException {
         this.reservedWords = reservedWords;
         this.symbols = symbols;
         this.fileInputStream = new FileInputStream(file);
         this.bufferInputStream = new BufferedInputStream(this.fileInputStream);
         this.column = 0;
         this.row = 0;
+        this.specialOperators = specialOperators;
     }
 
     private String FindPattern(String regex) throws IOException {
@@ -28,6 +30,8 @@ class LexicalAnalyzer {
                 break;
             } else if (String.valueOf(currentPosition).matches(regex)){
                 value += currentPosition;
+            } else {
+                break;
             }
         }
         return value;
@@ -47,7 +51,7 @@ class LexicalAnalyzer {
         return current;
     }
 
-    protected List<Token> analyser() throws IOException {
+    List<Token> analyser() throws IOException {
         List<Token> tokens = new ArrayList<>();
         Token token = recognizeToken();
         while (token != null) {
@@ -69,16 +73,22 @@ class LexicalAnalyzer {
         if (word.matches("[0-9]")) {
             resetBuffer();
             token = FindNumber();
-        } else if (word.matches("[a-z]")) {
+        } else if (word.matches("[a-zA-Z]")) {
             resetBuffer();
             token = FindReservedWord();
-        } else if (word.matches("[()+\\-*/%.]")) {
+        } else if (word.matches("[+\\-*/%]")) {
             resetBuffer();
             token = FindOperator("oparithmetical");
-        } else if (word.matches("[()!&*/|.]")) {
+        } else if (word.matches("[!&*/|]")) {
             resetBuffer();
             token = FindOperator("oplogical");
-        } else {
+        } else if (word.matches("[=<>!]")) {
+            resetBuffer();
+            token = FindOperator("oprelational");
+        } else if (word.matches("[()={}\\[\\]:\";'?,]")) {
+            resetBuffer();
+            token = FindOperator("symnbol");
+        }  else {
             resetBuffer();
         }
         return token;
@@ -100,14 +110,12 @@ class LexicalAnalyzer {
 
     private Token FindReservedWord() throws IOException {
         Token reservedWord = new Token("", "", this.column, this.row);
-        String value = FindPattern("[a-z]");
+        String value = FindPattern("[a-zA-Z0-9]");
         resetBuffer();
         if (this.reservedWords.contains(value)) {
             reservedWord.setValue(value);
             reservedWord.setAttribute("reserved");
         } else {
-//            reservedWord.setError("Nao e uma palavra reservada");
-            value = FindPattern("[a-zA-Z]");
             reservedWord.setAttribute("ID");
             reservedWord.setValue(value);
         }
@@ -119,12 +127,25 @@ class LexicalAnalyzer {
         Token operator = new Token(attribute, "", this.column, this.row);
         String current = String.valueOf(readChar());
         char nextOperator = readChar();
-        if (current.equals(String.valueOf(nextOperator))) {
+        if (specialOperators.contains(String.valueOf(current + nextOperator))) {
             current += nextOperator;
         } else {
             resetBuffer();
         }
         operator.setValue(String.valueOf(current));
         return operator;
+    }
+
+    private Token FindSymbols() throws IOException {
+        Token symbol = new Token("symbol", "", this.column, this.row);
+        String nextSymbol = String.valueOf(readChar());
+        resetBuffer();
+        if(this.symbols.contains(nextSymbol)){
+            symbol.setValue(nextSymbol);
+        } else {
+            symbol.setError("Character not defined");
+        }
+        resetBuffer();
+        return symbol;
     }
 }

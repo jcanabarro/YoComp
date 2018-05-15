@@ -21,9 +21,10 @@ public class Main {
                 List<String> reservedWord = Arrays.asList("yoint", "yofloat", "yochar", "lag", "sehloiro", "yobool",
                         "eoq", "trab", "holy", "fon", "yogod", "circo", "soled", "break", "true", "false", "printfi",
                         "solado", "scanfi");
-                List<String> symbols = Arrays.asList("{", "}");
+                List<String> symbols = Arrays.asList("{", "}", ";", "?", "\"", "(", ")", "=", ":", "[", "]");
+                List<String> specialOperators = Arrays.asList("++", "--", "&&", "||", "==", "<=", "<", ">=", ">", "!=");
 
-                LexicalAnalyzer lexical = new LexicalAnalyzer(file, reservedWord, symbols);
+                LexicalAnalyzer lexical = new LexicalAnalyzer(file, reservedWord, symbols, specialOperators);
                 List<Token> tokens = lexical.analyser();
                 System.out.println(tokens);
             } catch (IOException e) {
