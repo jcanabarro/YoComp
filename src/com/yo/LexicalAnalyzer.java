@@ -24,10 +24,10 @@ class LexicalAnalyzer {
         char currentPosition;
         while (this.bufferInputStream.available() > 0) {
             currentPosition = readChar();
-            if (String.valueOf(currentPosition).matches(regex)) {
-                value += currentPosition;
-            } else {
+            if ((currentPosition == ' ') || (currentPosition == '\n')) {
                 break;
+            } else if (String.valueOf(currentPosition).matches(regex)){
+                value += currentPosition;
             }
         }
         return value;
@@ -42,15 +42,8 @@ class LexicalAnalyzer {
         this.bufferInputStream.mark(2);
         char current = (char) this.bufferInputStream.read();
         this.column++;
-        if (current == ' ') {
-            return '\n';
-        }
-        while (current == '\n') {
-            this.column = 0;
-            this.row++;
-            this.bufferInputStream.mark(2);
-            current = (char) this.bufferInputStream.read();
-        }
+        if (current == '\n')
+            return ' ';
         return current;
     }
 
