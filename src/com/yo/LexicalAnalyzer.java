@@ -1,11 +1,14 @@
 package com.yo;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 class LexicalAnalyzer {
-    private FileInputStream fileInputStream;
     private BufferedInputStream bufferInputStream;
     private int column, row;
     private List<String> reservedWords, symbols, specialOperators;
@@ -14,8 +17,7 @@ class LexicalAnalyzer {
             throws FileNotFoundException {
         this.reservedWords = reservedWords;
         this.symbols = symbols;
-        this.fileInputStream = new FileInputStream(file);
-        this.bufferInputStream = new BufferedInputStream(this.fileInputStream);
+        this.bufferInputStream = new BufferedInputStream(new FileInputStream(file));
         this.column = 0;
         this.row = 0;
         this.specialOperators = specialOperators;
@@ -87,7 +89,7 @@ class LexicalAnalyzer {
             token = FindOperator("oprelational");
         } else if (word.matches("[()={}\\[\\]:\";'?,]")) {
             resetBuffer();
-            token = FindOperator("symnbol");
+            token = FindOperator("symbol");
         }  else {
             resetBuffer();
         }
@@ -139,7 +141,6 @@ class LexicalAnalyzer {
     private Token FindSymbols() throws IOException {
         Token symbol = new Token("symbol", "", this.column, this.row);
         String nextSymbol = String.valueOf(readChar());
-        resetBuffer();
         if(this.symbols.contains(nextSymbol)){
             symbol.setValue(nextSymbol);
         } else {
