@@ -1,3 +1,10 @@
-hahaha
-?
-()
+yogod(){
+
+    yoint aa = 0;
+    yochar bb = 'c';
+    yofloat cc = 10.1;
+
+    yofloat dd = cc + aa;
+    printfi(dd);
+solado 0;
+}
