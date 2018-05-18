@@ -1,10 +1,27 @@
 yogod(){
 
-    yoint aa = 0;
-    yochar bb = 'c';
-    yofloat cc = 10.1;
+    yoint a = 1;
+    yofloat b = 2.2;
+    yobool c = false;
+    yochar b = 'd';
+    $
 
-    yofloat dd = cc + aa;
-    printfi(dd);
-solado 0;
+    a = !a;
+    b = a && b;
+    c = b || c;
+
+    a = a + a;
+    b = b - b;
+    c = c * c;
+    d = d / d;
+    e = e % e;
+    a++;
+    b--;
+
+    a == b;
+    b != c;
+    d > e;
+    e >= a;
+    a < b;
+    a <= c;
 }

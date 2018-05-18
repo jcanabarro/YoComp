@@ -32,9 +32,9 @@ public class Token {
             return "<" + this.attribute + ", " + this.value + ">";
         } else {
             if(this.value != null) {
-                return "<" + this.attribute + ", " + this.error + ", Char: '" + this.value +"', linha: "+ this.row + ", coluna: "+ this.column +">";
+                return "<" + this.attribute + ", " + this.error + ", Char: '" + this.value +"', row: "+ this.row + ", column: "+ this.column +">";
             }
-            return "<" + this.attribute + ", " + this.error + ", linha: "+ this.row + ", coluna: "+ this.column +">";
+            return "<" + this.attribute + ", " + this.error + ", row: "+ this.row + ", column: "+ this.column +">";
         }
     }
 
