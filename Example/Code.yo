@@ -4,8 +4,8 @@ yogod(){
     yofloat b = 2.2;
     yobool c = false;
     yochar b = 'd';
-    $
 
+    ? lalalalalalalalalala ?
     a = !a;
     b = a && b;
     c = b || c;

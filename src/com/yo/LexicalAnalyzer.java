@@ -121,13 +121,18 @@ class LexicalAnalyzer {
         Token number = new Token("num", "", this.column, this.row);
         String value = FindPattern("[0-9]");
         resetBuffer();
+        number.setValue(value);
         if (readChar() == '.') {
             value += '.';
-            value += FindPattern("[0-9]");
+            String validation = FindPattern("[0-9]");
+            value += validation;
+            number.setValue(value);
+            if(validation.equals("")){
+                number.setError("Wrong float definition");
+            }
         } else {
             resetBuffer();
         }
-        number.setValue(value);
         return number;
     }
 
