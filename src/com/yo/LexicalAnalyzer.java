@@ -19,7 +19,7 @@ class LexicalAnalyzer {
         this.symbols = symbols;
         this.bufferInputStream = new BufferedInputStream(new FileInputStream(file));
         this.column = 0;
-        this.row = 0;
+        this.row = 1;
         this.specialOperators = specialOperators;
     }
 
@@ -47,6 +47,8 @@ class LexicalAnalyzer {
             if (currentPosition != symbol) {
                 value += currentPosition;
             } else {
+                readChar();
+                readChar();
                 break;
             }
         }
@@ -62,8 +64,11 @@ class LexicalAnalyzer {
         this.bufferInputStream.mark(2);
         char current = (char) this.bufferInputStream.read();
         this.column++;
-        if (current == '\n')
+        if (current == '\n') {
+            this.column = 0;
+            this.row++;
             return ' ';
+        }
         return current;
     }
 
@@ -79,12 +84,27 @@ class LexicalAnalyzer {
         return tokens;
     }
 
-    private Token recognizeToken() throws IOException {
-        Token token = null;
+    private char readPosition() throws IOException {
+
         char currentPosition = readChar();
         while (currentPosition == ' ' || currentPosition == '\n') {
             currentPosition = readChar();
         }
+
+        if (currentPosition == '?'){
+            readString('?');
+            currentPosition = readChar();
+            while (currentPosition == ' ' || currentPosition == '\n') {
+                currentPosition = readChar();
+            }
+        }
+
+        return  currentPosition;
+    }
+
+    private Token recognizeToken() throws IOException {
+        Token token = null;
+        char currentPosition = readPosition();
 
         String word = String.valueOf(currentPosition);
         if (word.matches("[0-9]")) {
@@ -108,10 +128,8 @@ class LexicalAnalyzer {
         } else if (word.matches("[\"']")) {
             resetBuffer();
             token = FindString();
-        } else if(word.matches("[?]")) {
-            resetBuffer();
-            readString('?');
         } else {
+            if (!word.equals("\uFFFF")) // EOF
             token = ErrorStatement(word);
         }
         return token;
@@ -127,6 +145,7 @@ class LexicalAnalyzer {
             String validation = FindPattern("[0-9]");
             value += validation;
             number.setValue(value);
+            resetBuffer();
             if(validation.equals("")){
                 number.setError("Wrong float definition");
             }
@@ -169,8 +188,6 @@ class LexicalAnalyzer {
         String nextSymbol = String.valueOf(readChar());
         if (this.symbols.contains(nextSymbol)) {
             symbol.setValue(nextSymbol);
-        } else {
-            symbol.setError("Character not defined");
         }
         return symbol;
     }
@@ -178,9 +195,9 @@ class LexicalAnalyzer {
     private Token FindString() throws IOException {
         Token symbol = new Token("", "", this.column, this.row);
         char nextSymbol = readChar();
+        symbol.setAttribute("character");
         if(nextSymbol == '\''){
             String character = readString(nextSymbol);
-            symbol.setAttribute("character");
             symbol.setValue('\'' + character + '\'');
         } else {
             String string = readString(nextSymbol);
