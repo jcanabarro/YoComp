@@ -5,12 +5,11 @@ public class Token {
     private String attribute;
     private String value;
     private String error = "";
-    private int row, column;
+    private int row;
 
-    Token(String attribute, String value, int column, int row) {
+    Token(String attribute, String value, int row) {
         this.attribute = attribute;
         this.value = value;
-        this.column = column;
         this.row = row;
     }
 
@@ -32,9 +31,9 @@ public class Token {
             return "<" + this.attribute + ", " + this.value + ">";
         } else {
             if(this.value != null) {
-                return "<" + this.attribute + ", " + this.error + ", Char: '" + this.value +"', row: "+ this.row + ", column: "+ this.column +">";
+                return "<" + this.attribute + ", " + this.error + ", Char: '" + this.value +"', row: "+ this.row +">";
             }
-            return "<" + this.attribute + ", " + this.error + ", row: "+ this.row + ", column: "+ this.column +">";
+            return "<" + this.attribute + ", " + this.error + ", row: "+ this.row + ", column: "+">";
         }
     }
 
@@ -52,11 +51,4 @@ public class Token {
 
     public void setRow(int row) { this.row = row; }
 
-    public int getColumn() {
-        return this.column;
-    }
-
-    public void setColumn(int column) {
-        this.column = column;
-    }
 }

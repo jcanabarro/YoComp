@@ -18,15 +18,16 @@ public class Main {
                 return;
             }
             try {
-                List<String> reservedWord = Arrays.asList("yoint", "yofloat", "yochar", "lag", "sehloiro", "yobool",
-                        "eoq", "trab", "holy", "fon", "yogod", "circo", "soled", "break", "true", "false", "printfi",
-                        "solado", "scanfi");
+                List<String> reservedWord = Arrays.asList(  "yoint", "yofloat", "yochar", "lag", "sehloiro", "yobool",
+                                                            "eoq", "trab", "holy", "fon", "yogod", "circo", "soled",
+                                                            "break", "true", "false", "printfi", "solado", "scanfi");
                 List<String> symbols = Arrays.asList("{", "}", ";", "?", "\"", "(", ")", "=", ":", "[", "]");
                 List<String> specialOperators = Arrays.asList("++", "--", "&&", "||", "==", "<=", "<", ">=", ">", "!=");
 
                 LexicalAnalyzer lexical = new LexicalAnalyzer(file, reservedWord, symbols, specialOperators);
                 List<Token> tokens = lexical.analyser();
-                System.out.println(tokens);
+                for (Token token: tokens)
+                    System.out.println(token);
             } catch (IOException e) {
                 e.printStackTrace();
             }

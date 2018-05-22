@@ -1,6 +1,7 @@
 yogod(){
 
     yoint a = 1;
+
     yofloat b = 2.2;
     yobool c = false;
     yochar b = 'd';

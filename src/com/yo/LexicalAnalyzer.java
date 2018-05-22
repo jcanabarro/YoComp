@@ -18,7 +18,6 @@ class LexicalAnalyzer {
         this.reservedWords = reservedWords;
         this.symbols = symbols;
         this.bufferInputStream = new BufferedInputStream(new FileInputStream(file));
-        this.column = 0;
         this.row = 1;
         this.specialOperators = specialOperators;
     }
@@ -55,15 +54,12 @@ class LexicalAnalyzer {
 
     private void resetBuffer() throws IOException {
         this.bufferInputStream.reset();
-        this.column--;
     }
 
     private char readChar() throws IOException {
         this.bufferInputStream.mark(2);
         char current = (char) this.bufferInputStream.read();
-        this.column++;
         if (current == '\n') {
-            this.column = 0;
             this.row++;
             return ' ';
         }
@@ -128,7 +124,7 @@ class LexicalAnalyzer {
     }
 
     private Token FindNumber() throws IOException {
-        Token number = new Token("num", "", this.column, this.row);
+        Token number = new Token("num", "", this.row);
         String value = FindPattern("[0-9]");
         resetBuffer();
         number.setValue(value);
@@ -149,7 +145,7 @@ class LexicalAnalyzer {
     }
 
     private Token FindReservedWord() throws IOException {
-        Token reservedWord = new Token("", "", this.column, this.row);
+        Token reservedWord = new Token("", "", this.row);
         String value = FindPattern("[a-zA-Z0-9]");
         resetBuffer();
         if (this.reservedWords.contains(value)) {
@@ -164,7 +160,7 @@ class LexicalAnalyzer {
     }
 
     private Token FindOperator(String attribute) throws IOException {
-        Token operator = new Token(attribute, "", this.column, this.row);
+        Token operator = new Token(attribute, "", this.row);
         String current = String.valueOf(readChar());
         char nextOperator = readChar();
         if (specialOperators.contains(String.valueOf(current + nextOperator))) {
@@ -178,7 +174,7 @@ class LexicalAnalyzer {
     }
 
     private Token FindSymbols() throws IOException {
-        Token symbol = new Token("symbol", "", this.column, this.row);
+        Token symbol = new Token("symbol", "", this.row);
         String nextSymbol = String.valueOf(readChar());
         if (this.symbols.contains(nextSymbol)) {
             symbol.setValue(nextSymbol);
@@ -188,7 +184,7 @@ class LexicalAnalyzer {
     }
 
     private Token FindString() throws IOException {
-        Token symbol = new Token("", "", this.column, this.row);
+        Token symbol = new Token("", "", this.row);
         char nextSymbol = readChar();
         symbol.setAttribute("character");
         if(nextSymbol == '\''){
@@ -204,7 +200,7 @@ class LexicalAnalyzer {
     }
 
     private Token ErrorStatement(String word) throws IOException {
-        Token error = new Token("", "", this.column, this.row);
+        Token error = new Token("", "", this.row);
         resetBuffer();
         error.setError("Character not defined");
         error.setValue(word);
