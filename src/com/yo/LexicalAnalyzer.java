@@ -10,7 +10,7 @@ import java.util.List;
 
 class LexicalAnalyzer {
     private BufferedInputStream bufferInputStream;
-    private int column, row;
+    private int row;
     private List<String> reservedWords, symbols, specialOperators;
 
     LexicalAnalyzer(File file, List<String> reservedWords, List<String> symbols, List<String> specialOperators)
