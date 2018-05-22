@@ -5,7 +5,6 @@ yogod(){
     yobool c = false;
     yochar b = 'd';
 
-    ? lalalalalalalalalala ?
     a = !a;
     b = a && b;
     c = b || c;

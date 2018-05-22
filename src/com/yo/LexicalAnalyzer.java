@@ -47,8 +47,6 @@ class LexicalAnalyzer {
             if (currentPosition != symbol) {
                 value += currentPosition;
             } else {
-                readChar();
-                readChar();
                 break;
             }
         }
@@ -80,7 +78,6 @@ class LexicalAnalyzer {
             if(!token.getError().equals("")) break;
             token = recognizeToken();
         }
-        tokens.add(new Token("$", "yogod", this.column, this.row));
         return tokens;
     }
 
@@ -90,21 +87,16 @@ class LexicalAnalyzer {
         while (currentPosition == ' ' || currentPosition == '\n') {
             currentPosition = readChar();
         }
-
-        if (currentPosition == '?'){
-            readString('?');
-            currentPosition = readChar();
-            while (currentPosition == ' ' || currentPosition == '\n') {
-                currentPosition = readChar();
-            }
-        }
-
         return  currentPosition;
     }
 
     private Token recognizeToken() throws IOException {
         Token token = null;
         char currentPosition = readPosition();
+        if (currentPosition == '?'){
+            readString('?');
+            currentPosition = readPosition();
+        }
 
         String word = String.valueOf(currentPosition);
         if (word.matches("[0-9]")) {
@@ -152,6 +144,7 @@ class LexicalAnalyzer {
         } else {
             resetBuffer();
         }
+        number.setRow(this.row);
         return number;
     }
 
@@ -180,6 +173,7 @@ class LexicalAnalyzer {
             resetBuffer();
         }
         operator.setValue(String.valueOf(current));
+        operator.setRow(this.row);
         return operator;
     }
 
@@ -189,6 +183,7 @@ class LexicalAnalyzer {
         if (this.symbols.contains(nextSymbol)) {
             symbol.setValue(nextSymbol);
         }
+        symbol.setRow(this.row);
         return symbol;
     }
 
@@ -204,6 +199,7 @@ class LexicalAnalyzer {
             symbol.setAttribute("string");
             symbol.setValue('\"' + string + '\"');
         }
+        symbol.setRow(this.row);
         return symbol;
     }
 
@@ -212,6 +208,7 @@ class LexicalAnalyzer {
         resetBuffer();
         error.setError("Character not defined");
         error.setValue(word);
+        error.setRow(this.row);
         return  error;
     }
 }
