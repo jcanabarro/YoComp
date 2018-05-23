@@ -1,5 +1,7 @@
 # YoComp
 
+**How To**
+
 Para rodar o programa devem ser executados os seguintes comandos:
 
 * cd /src
