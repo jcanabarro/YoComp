@@ -1,0 +1,10 @@
+yogod() {
+    yoint a = 10;
+    yofloat b = 10.;
+    yofloat result;
+
+    result = a + b;
+    printfi(result);
+
+    solado 0;
+}

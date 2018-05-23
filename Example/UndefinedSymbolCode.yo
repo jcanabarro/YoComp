@@ -1,0 +1,7 @@
+yogod() {
+
+    @
+    printfi("Hello World!");
+
+    solado 0;
+}

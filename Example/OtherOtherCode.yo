@@ -1,0 +1,9 @@
+yogod() {
+   yoint a = 10;
+
+   holy( a < 20 ) {
+      printfi("value of a:" + a );
+      a++;
+   }
+   solado 0;
+}

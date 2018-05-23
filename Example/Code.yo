@@ -1,29 +1,17 @@
-yogod(){
+yogod() {
+    yoint a = 0;
+    yoint b = 3;
+    yofloat result;
 
-    yoint a = 1;
+    result = a + b;
 
-    yofloat b = 2.2;
-    yobool c = false;
-    yochar b = 'd';
+    fon(int i = 0; i < 20; i++){
+        eoq (i < n){
+            printfi(i+ "->");
+        } trab {
+            printfi(i);
+        }
+    }
 
-    ?Ignore this comment?
-
-    a = !a;
-    b = a && b;
-    c = b || c;
-
-    a = a + a;
-    b = b - b;
-    c = c * c;
-    d = d / d;
-    e = e % e;
-    a++;
-    b--;
-
-    a == b;
-    b != c;
-    d > e;
-    e >= a;
-    a < b;
-    a <= c;
+    solado 0;
 }

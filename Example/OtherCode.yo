@@ -1,0 +1,14 @@
+yogod() {
+    yoint number, i;
+
+    printfi("Enter a positive integer: ");
+    scanfi(number);
+
+    printf("Factors of " + number + " are: ");
+    for(i = 1; i <= number; i++) {
+        eoq (number % i == 0) {
+            printfi(i);
+        }
+    }
+    solado 0;
+}
