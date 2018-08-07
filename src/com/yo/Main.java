@@ -8,7 +8,7 @@ public class Main {
 
     private static String FILENAME;
     private static final String csvTable = "SRL/SRL.csv";
-    private static final String csvProduction = "SRL/SRL.csv";
+    private static final String csvProduction = "SRL/Producoes.csv";
 
     public static void main(String[] args) {
         if (args[0].equals("-yo")) {
@@ -30,7 +30,7 @@ public class Main {
                 List<Token> tokens = lexical.analyser();
                 System.out.println(tokens);
                 SyntacticAnalyzer syntactical = new SyntacticAnalyzer(csvTable, csvProduction);
-                syntactical.analisar(tokens);
+                syntactical.analyzer(tokens);
             } catch (IOException e) {
                 e.printStackTrace();
             }
