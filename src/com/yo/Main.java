@@ -7,6 +7,8 @@ import java.util.List;
 public class Main {
 
     private static String FILENAME;
+    private static final String csvTable = "SRL/SRL.csv";
+    private static final String csvProduction = "SRL/SRL.csv";
 
     public static void main(String[] args) {
         if (args[0].equals("-yo")) {
@@ -26,8 +28,9 @@ public class Main {
 
                 LexicalAnalyzer lexical = new LexicalAnalyzer(file, reservedWord, symbols, specialOperators);
                 List<Token> tokens = lexical.analyser();
-                for (Token token: tokens)
-                    System.out.println(token);
+                System.out.println(tokens);
+                SyntacticAnalyzer syntactical = new SyntacticAnalyzer(csvTable, csvProduction);
+                syntactical.analisar(tokens);
             } catch (IOException e) {
                 e.printStackTrace();
             }
