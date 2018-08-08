@@ -1,20 +1,78 @@
-Aug 08, 2018 4:02:32 PM com.yo.SyntacticAnalyzer readCSV
-INFO: Arquivo SRL/SRL.csv aberto com sucesso
-Aug 08, 2018 4:02:33 PM com.yo.SyntacticAnalyzer readCSV
-INFO: Arquivo SRL/Producoes.csv aberto com sucesso
-Aug 08, 2018 4:02:33 PM com.yo.SyntacticAnalyzer analyzer
-INFO: Initializing analysis
-Aug 08, 2018 4:02:33 PM com.yo.SyntacticAnalyzer analyzer
-INFO: <b>Check token 0</b>
-Aug 08, 2018 4:02:33 PM com.yo.SyntacticAnalyzer analyzer
-INFO: Stack: [0]
-Aug 08, 2018 4:02:33 PM com.yo.SyntacticAnalyzer analyzer
-INFO: Top of the stack: 0
-Aug 08, 2018 4:02:33 PM com.yo.SyntacticAnalyzer analyzer
-INFO: Read token: reserved
-Aug 08, 2018 4:02:33 PM com.yo.SyntacticAnalyzer analyzer
-INFO: Value of the cell [0, reserved]: null
-Aug 08, 2018 4:02:33 PM com.yo.SyntacticAnalyzer parserCell
-WARNING: celula vazia, parser retornando nulo
-Aug 08, 2018 4:02:33 PM com.yo.SyntacticAnalyzer analyzer
-WARNING: Null parser, arrive to the error state.
+ago 08, 2018 8:51:30 PM com.yo.SyntacticAnalyzer readCSV
+INFO: Arquivo SLR/SLR.csv aberto com sucesso
+ago 08, 2018 8:51:30 PM com.yo.SyntacticAnalyzer readCSV
+INFO: Arquivo SLR/Producoes.csv aberto com sucesso
+ago 08, 2018 8:51:30 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Inicializando Analise
+ago 08, 2018 8:51:30 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: <b>Verificando token 0</b>
+ago 08, 2018 8:51:30 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Pilha: [0]
+ago 08, 2018 8:51:30 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Topo da pilha: 0
+ago 08, 2018 8:51:30 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Token lido: yogod
+ago 08, 2018 8:51:30 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Valor na celula [0, yogod]: E2
+ago 08, 2018 8:51:30 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Empilhando yogod e 2
+ago 08, 2018 8:51:30 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: <b>Verificando token 1</b>
+ago 08, 2018 8:51:30 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Pilha: [0, yogod, 2]
+ago 08, 2018 8:51:30 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Topo da pilha: 2
+ago 08, 2018 8:51:30 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Token lido: (
+ago 08, 2018 8:51:31 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Valor na celula [2, (]: E3
+ago 08, 2018 8:51:31 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Empilhando ( e 3
+ago 08, 2018 8:51:31 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: <b>Verificando token 2</b>
+ago 08, 2018 8:51:31 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Pilha: [0, yogod, 2, (, 3]
+ago 08, 2018 8:51:31 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Topo da pilha: 3
+ago 08, 2018 8:51:31 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Token lido: )
+ago 08, 2018 8:51:32 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Valor na celula [3, )]: E4
+ago 08, 2018 8:51:32 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Empilhando ) e 4
+ago 08, 2018 8:51:32 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: <b>Verificando token 3</b>
+ago 08, 2018 8:51:32 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Pilha: [0, yogod, 2, (, 3, ), 4]
+ago 08, 2018 8:51:32 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Topo da pilha: 4
+ago 08, 2018 8:51:32 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Token lido: {
+ago 08, 2018 8:51:33 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Valor na celula [4, {]: E5
+ago 08, 2018 8:51:33 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Empilhando { e 5
+ago 08, 2018 8:51:33 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: <b>Verificando token 4</b>
+ago 08, 2018 8:51:33 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Pilha: [0, yogod, 2, (, 3, ), 4, {, 5]
+ago 08, 2018 8:51:33 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Topo da pilha: 5
+ago 08, 2018 8:51:33 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Token lido: yofloat
+ago 08, 2018 8:51:34 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Valor na celula [5, yofloat]: E22
+ago 08, 2018 8:51:34 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Empilhando yofloat e 22
+ago 08, 2018 8:51:34 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: <b>Verificando token 5</b>
+ago 08, 2018 8:51:34 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Pilha: [0, yogod, 2, (, 3, ), 4, {, 5, yofloat, 22]
+ago 08, 2018 8:51:34 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Topo da pilha: 22
+ago 08, 2018 8:51:34 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Token lido: id
+ago 08, 2018 8:51:36 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Valor na celula [22, id]: R8
+ago 08, 2018 8:51:36 PM com.yo.SyntacticAnalyzer Analyzer
+INFO: Reduzindo pela producao 8

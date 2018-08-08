@@ -152,8 +152,8 @@ class LexicalAnalyzer {
             reservedWord.setValue(value);
             reservedWord.setAttribute("reserved");
         } else {
-            reservedWord.setAttribute("ID");
-            reservedWord.setValue(value);
+            reservedWord.setAttribute(value);
+            reservedWord.setValue("id");
         }
         resetBuffer();
         return reservedWord;
