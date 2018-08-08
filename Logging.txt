@@ -1,0 +1,4 @@
+Aug 07, 2018 3:19:48 PM com.yo.SyntacticAnalyzer readCSV
+INFO: Arquivo SRL/SRL.csv aberto com sucesso
+Aug 07, 2018 3:19:48 PM com.yo.SyntacticAnalyzer readCSV
+INFO: Arquivo SRL/SRL.csv aberto com sucesso
