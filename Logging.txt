@@ -1,4 +1,20 @@
-Aug 07, 2018 3:19:48 PM com.yo.SyntacticAnalyzer readCSV
+Aug 08, 2018 4:02:32 PM com.yo.SyntacticAnalyzer readCSV
 INFO: Arquivo SRL/SRL.csv aberto com sucesso
-Aug 07, 2018 3:19:48 PM com.yo.SyntacticAnalyzer readCSV
-INFO: Arquivo SRL/SRL.csv aberto com sucesso
+Aug 08, 2018 4:02:33 PM com.yo.SyntacticAnalyzer readCSV
+INFO: Arquivo SRL/Producoes.csv aberto com sucesso
+Aug 08, 2018 4:02:33 PM com.yo.SyntacticAnalyzer analyzer
+INFO: Initializing analysis
+Aug 08, 2018 4:02:33 PM com.yo.SyntacticAnalyzer analyzer
+INFO: <b>Check token 0</b>
+Aug 08, 2018 4:02:33 PM com.yo.SyntacticAnalyzer analyzer
+INFO: Stack: [0]
+Aug 08, 2018 4:02:33 PM com.yo.SyntacticAnalyzer analyzer
+INFO: Top of the stack: 0
+Aug 08, 2018 4:02:33 PM com.yo.SyntacticAnalyzer analyzer
+INFO: Read token: reserved
+Aug 08, 2018 4:02:33 PM com.yo.SyntacticAnalyzer analyzer
+INFO: Value of the cell [0, reserved]: null
+Aug 08, 2018 4:02:33 PM com.yo.SyntacticAnalyzer parserCell
+WARNING: celula vazia, parser retornando nulo
+Aug 08, 2018 4:02:33 PM com.yo.SyntacticAnalyzer analyzer
+WARNING: Null parser, arrive to the error state.
