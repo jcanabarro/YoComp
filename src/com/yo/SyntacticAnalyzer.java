@@ -119,8 +119,6 @@ class SyntacticAnalyzer {
                         break;
                 }
             }
-            //------------------------------------
-
             LOGGER.info("Token lido: " + a);
             String celula = cellValue(s, a, true);
             LOGGER.info("Valor na celula [" + s + ", " + a + "]: " + celula);
