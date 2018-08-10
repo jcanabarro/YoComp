@@ -124,7 +124,7 @@ class LexicalAnalyzer {
     }
 
     private Token FindNumber() throws IOException {
-        Token number = new Token("num", "", this.row);
+        Token number = new Token("int", "", this.row);
         String value = FindPattern("[0-9]");
         resetBuffer();
         number.setValue(value);
@@ -133,6 +133,7 @@ class LexicalAnalyzer {
             String validation = FindPattern("[0-9]");
             value += validation;
             number.setValue(value);
+            number.setAttribute("float");
             resetBuffer();
             if(validation.equals("")){
                 number.setError("Wrong float definition");
@@ -186,14 +187,14 @@ class LexicalAnalyzer {
     private Token FindString() throws IOException {
         Token symbol = new Token("", "", this.row);
         char nextSymbol = readChar();
-        symbol.setAttribute("character");
         if(nextSymbol == '\''){
             String character = readString(nextSymbol);
-            symbol.setValue('\'' + character + '\'');
+            symbol.setAttribute('\'' + character + '\'');
+            symbol.setValue("char");
         } else {
             String string = readString(nextSymbol);
-            symbol.setAttribute("string");
-            symbol.setValue('\"' + string + '\"');
+            symbol.setAttribute('\'' + string + '\'');
+            symbol.setValue("string");
         }
         symbol.setRow(this.row);
         return symbol;

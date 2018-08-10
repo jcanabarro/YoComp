@@ -16,7 +16,6 @@ class SyntacticAnalyzer {
     private String[] cabecalhoProducoes = null;
     private List<String[]> producoes;
     private Stack<String> pilha;
-    private List<Integer> lambda_inst;
 
     public SyntacticAnalyzer(String csvTable, String csvProd) throws IOException {
         MyLogger.setup();
@@ -28,8 +27,6 @@ class SyntacticAnalyzer {
         this.pilha = new Stack<>();
         LOGGER.finest("Pilha foi inicializada");
         pushInt(0);
-        LOGGER.finest("Adicionado o estado inicial na pilha");
-        this.lambda_inst = Arrays.asList(78, 79, 80, 81, 82, 105, 156);
     }
 
     public boolean Analyzer(List<Token> tokens) {
@@ -46,79 +43,6 @@ class SyntacticAnalyzer {
             LOGGER.info("Topo da pilha: " + s);
             String a = tokens.get(i).getValue();
 
-            if (s == 5 || s == 36 || s == 37 || s == 38) {
-                switch (a) {
-                    case ("!"):
-                        break;
-                    case ("--"):
-                        break;
-                    case ("/"):
-                        break;
-                    case ("*"):
-                        break;
-                    case ("%"):
-                        break;
-                    case ("++"):
-                        break;
-                    case ("<"):
-                        break;
-                    case ("<="):
-                        break;
-                    case (">"):
-                        break;
-                    case (">="):
-                        break;
-                    case ("=="):
-                        break;
-                    case ("!="):
-                        break;
-                    case ("TRUE"):
-                        break;
-                    case ("FALSE"):
-                        break;
-                    case ("yoint"):
-                        break;
-                    case ("yofloat"):
-                        break;
-                    case ("yobool"):
-                        break;
-                    case ("yochar"):
-                        break;
-                    default:
-                        a = "lambda";
-                        break;
-                }
-            }
-
-            if (this.lambda_inst.contains(s)) {
-                switch (a) {
-                    case ("if"):
-                        break;
-                    case ("while"):
-                        break;
-                    case ("for"):
-                        break;
-                    case ("switch"):
-                        break;
-                    case ("int"):
-                        break;
-                    case ("char"):
-                        break;
-                    case ("bool"):
-                        break;
-                    case ("id"):
-                        break;
-                    case ("read"):
-                        break;
-                    case ("printf"):
-                        break;
-                    case (")"):
-                        break;
-                    default:
-                        a = "lambda";
-                        break;
-                }
-            }
             LOGGER.info("Token lido: " + a);
             String celula = cellValue(s, a, true);
             LOGGER.info("Valor na celula [" + s + ", " + a + "]: " + celula);
@@ -133,9 +57,7 @@ class SyntacticAnalyzer {
                     this.pilha.push(a);
                     this.pilha.push(parser[1]);
                     LOGGER.finest(a + " e " + parser[1] + " empilhado com sucesso");
-                    if ((s != 43 && !this.lambda_inst.contains(s)) || (!a.equals("lambda") && !a.equals("$"))) {
-                        i++;
-                    }
+                    i++;
                     break;
                 case "R":
                     LOGGER.info("Reduzindo pela producao " + parser[1]);
