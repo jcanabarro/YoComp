@@ -124,16 +124,16 @@ class LexicalAnalyzer {
     }
 
     private Token FindNumber() throws IOException {
-        Token number = new Token("int", "", this.row);
+        Token number = new Token("", "int", this.row);
         String value = FindPattern("[0-9]");
         resetBuffer();
-        number.setValue(value);
+        number.setAttribute(value);
         if (readChar() == '.') {
             value += '.';
             String validation = FindPattern("[0-9]");
             value += validation;
-            number.setValue(value);
-            number.setAttribute("float");
+            number.setValue("float");
+            number.setAttribute(value);
             resetBuffer();
             if(validation.equals("")){
                 number.setError("Wrong float definition");

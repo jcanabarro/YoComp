@@ -1,4 +1,7 @@
 yogod() {
-    a = b
+
+    fon( a = 0; a < 10 ; a++){
+        printfi(a)
+    }
     solado
 }
