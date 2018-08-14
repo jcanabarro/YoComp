@@ -31,7 +31,7 @@ class SyntacticAnalyzer {
 
     public boolean Analyzer(List<Token> tokens) {
         int i = 0;
-        tokens.add(new Token("$", "lambda", 0));
+        tokens.add(new Token("CUZAO", "$", 0));
         LOGGER.info("Inicializando Analise");
         while (i < tokens.size()) {
 
