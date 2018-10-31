@@ -46,9 +46,9 @@ class SyntacticAnalyzer {
             LOGGER.info("Token lido: " + a);
             String celula = cellValue(s, a, true);
             LOGGER.info("Valor na celula [" + s + ", " + a + "]: " + celula);
-            String[] parser = parserCell(celula);
+            String[] parser = parserCell(celula, s);
             if (parser == null) {
-                LOGGER.warning("Parser nulo, chegamos em um estado de erro.");
+                LOGGER.warning("Parser nulo, estado de erro.");
                 return false;
             }
             switch (parser[0]) {
@@ -64,8 +64,8 @@ class SyntacticAnalyzer {
                     String cell = cellValue(Integer.valueOf(parser[1]), "len", false);
                     LOGGER.finest("tamanho da producao lida: " + cell);
                     String prod = cellValue(Integer.valueOf(parser[1]), "A", false);
-                    LOGGER.info("Tamanho da producao " + prodLog(prod) + " " + parser[1] + ": " + cell);
-                    int tamanho = 2 * Integer.valueOf(cell);
+                    LOGGER.info("Tamanho da producao " + prodLog(Objects.requireNonNull(prod)) + " " + parser[1] + ": " + cell);
+                    int tamanho = 2 * Integer.valueOf(Objects.requireNonNull(cell));
                     LOGGER.info("quantidade de elementos a serem desempilhados: " + tamanho);
                     for (int j = 0; j < tamanho; j++) {
                         String p = pilha.pop();
@@ -93,9 +93,17 @@ class SyntacticAnalyzer {
         return false;
     }
 
-    private String[] parserCell(String celula) {
+    private String[] parserCell(String celula, int position) {
         if (celula == null || celula.equals("")) {
-            LOGGER.warning("celula vazia, parser retornando nulo");
+
+            List<String> list = new ArrayList<>();
+            int len = this.tabela.get(position).length;
+            for(int i = 1; i <= len - 1; i++){
+                if (!this.tabela.get(position)[i].equals("")){
+                    list.add(this.cabecalhoTabela[i]);
+                }
+            }
+            LOGGER.warning("celula vazia, era esperado: " + String.valueOf(list));
             return null;
         }
         String[] res = new String[2];
