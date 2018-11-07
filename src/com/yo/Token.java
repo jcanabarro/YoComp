@@ -5,6 +5,7 @@ public class Token {
     private String attribute;
     private String value;
     private String error = "";
+    private String code = "";
     private int row;
 
     Token(String attribute, String value, int row) {
@@ -13,15 +14,20 @@ public class Token {
         this.row = row;
     }
 
+    public Token(String atributo, String valor) {
+        this.attribute = atributo;
+        this.value = valor;
+    }
+
     public String getAttribute() {
         return this.attribute;
     }
 
-    public void setAttribute(String attribute) {
+    void setAttribute(String attribute) {
         this.attribute = attribute;
     }
 
-    public String getValue() {
+    String getValue() {
         return this.value;
     }
 
@@ -39,9 +45,9 @@ public class Token {
 
     void setValue(String value) { this.value = value; }
 
-    public String getError() { return this.error; }
+    String getError() { return this.error; }
 
-    public void setError(String error) {
+    void setError(String error) {
         this.error = error;
     }
 
@@ -49,6 +55,13 @@ public class Token {
         return this.row;
     }
 
-    public void setRow(int row) { this.row = row; }
+    void setRow(int row) { this.row = row; }
+
+    void setCode(String code) {
+        this.code = code;
+    }
+    String getCode() {
+        return this.code;
+    }
 
 }

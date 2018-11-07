@@ -18,7 +18,7 @@ class SyntacticAnalyzer {
     private List<String[]> tabela;
     private String[] cabecalhoProducoes = null;
     private List<String[]> producoes;
-    private Stack<String> pilha;
+    private Stack<Token> pilha;
 
     public SyntacticAnalyzer(String csvTable, String csvProd) throws IOException {
         MyLogger.setup();
@@ -58,8 +58,8 @@ class SyntacticAnalyzer {
             switch (parser[0]) {
                 case "E":
                     LOGGER.info("Empilhando " + a + " e " + parser[1]);
-                    this.pilha.push(a);
-                    this.pilha.push(parser[1]);
+                    this.pilha.push(tokens.get(i));
+                    this.pilha.push(new Token("", parser[1]));
                     LOGGER.finest(a + " e " + parser[1] + " empilhado com sucesso");
                     i++;
                     break;
@@ -71,18 +71,44 @@ class SyntacticAnalyzer {
                     LOGGER.info("Tamanho da producao " + prodLog(Objects.requireNonNull(prod)) + " " + parser[1] + ": " + cell);
                     int tamanho = 2 * Integer.valueOf(Objects.requireNonNull(cell));
                     LOGGER.info("quantidade de elementos a serem desempilhados: " + tamanho);
+
+                    Stack<Token> pilha_aux = new Stack<>();
+                    Token p;
                     for (int j = 0; j < tamanho; j++) {
-                        String p = pilha.pop();
+                        p = pilha.pop();
                         LOGGER.finest("desempilhando: " + p);
+                        if(j%2==1) {
+                            pilha_aux.push(p);
+                        }
+                    }
+                    LOGGER.finest("tamanho pilha auxiliar: "+ pilha_aux.size());
+
+                    LOGGER.info("pilha auxiliar: "+ prodLog(pilha_aux.toString()));
+
+                    Token t_prod = new Token("nao_terminal", prod);
+
+                    Token t_if, t_inst;
+
+                    switch(Integer.valueOf(parser[1])) {
+                        case 0:
+                            t_inst = pilha_aux.pop();
+                            System.out.println("Codigo intermediario gerado com sucesso:" + t_inst.getCode());
+                        case 1:
+                            t_if = pilha_aux.pop();
+                            t_inst = pilha_aux.pop();
+                            t_prod.setCode(t_if.getCode() + "\n" + t_inst.getCode());
+                            break;
+                        default:
+                            System.out.println(parser[1]);
                     }
                     int s1 = popInt();
                     pushInt(s1);
                     LOGGER.info("Topo da pilha: " + s1);
-                    this.pilha.push(prod);
+                    this.pilha.push(new Token("", prod));
                     LOGGER.info("Empilhando producao: " + prodLog(prod));
                     String desvio = cellValue(s1, prod, true);
                     LOGGER.info("Desvio[" + s1 + ", " + prodLog(prod) + "]: " + desvio);
-                    this.pilha.push(desvio);
+                    this.pilha.push(new Token("", desvio));
                     LOGGER.info("Empilhando desvio: " + desvio);
                     break;
                 case "a":
@@ -140,15 +166,17 @@ class SyntacticAnalyzer {
 
     private int popInt() {
         LOGGER.finest("desempilhando valor inteiro");
-        int value = Integer.valueOf(pilha.pop());
-        LOGGER.finest("valor inteiro desempilhado: " + value);
+        Token aux = pilha.pop();
+        int value = Integer.valueOf(aux.getValue());
+        LOGGER.finest("valor inteiro desempilhado: "+ value);
         return value;
     }
 
     private void pushInt(int value) {
+        Token aux = new Token("", String.valueOf(value));
         LOGGER.finest("empilhando valor inteiro");
-        pilha.push(String.valueOf(value));
-        LOGGER.finest("valor inteiro empilhado: " + value);
+        pilha.push(aux);
+        LOGGER.finest("valor inteiro empilhado: "+ value);
     }
 
     private int getIndexTable(String chave, boolean isTable) {
