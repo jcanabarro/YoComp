@@ -4,10 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
-import java.util.Stack;
-import java.util.Objects;
-import java.util.ArrayList;
+import java.util.*;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,6 +16,8 @@ class SyntacticAnalyzer {
     private String[] cabecalhoProducoes = null;
     private List<String[]> producoes;
     private Stack<Token> pilha;
+    private List<String> reversed_values;
+
 
     public SyntacticAnalyzer(String csvTable, String csvProd) throws IOException {
         MyLogger.setup();
@@ -28,6 +27,7 @@ class SyntacticAnalyzer {
         this.producoes = readCSV(csvProd, false);
         LOGGER.finest("Producões lidas com sucesso");
         this.pilha = new Stack<>();
+        this.reversed_values = Arrays.asList("string", "char", "int", "float", "id");
         LOGGER.finest("Pilha foi inicializada");
         pushInt(0);
     }
@@ -41,9 +41,12 @@ class SyntacticAnalyzer {
             LOGGER.info("Pilha: " + prodLog(this.pilha.toString()));
             int s = popInt();
             pushInt(s);
-
+            String a;
             LOGGER.info("Topo da pilha: " + s);
-            String a = tokens.get(i).getValue();
+            a = tokens.get(i).getValor();
+            if(this.reversed_values.contains(tokens.get(i).getAtributo())){
+                a = tokens.get(i).getAtributo();
+            }
 
             LOGGER.info("Token lido: " + a);
             String celula = cellValue(s, a, true);
@@ -111,25 +114,6 @@ class SyntacticAnalyzer {
         return false;
     }
 
-//    private void codeGenerator(String s, String prod, Stack<Token> pilha_aux) {
-//        Token t_prod = new Token("nao_terminal", prod);
-//
-//        Token t_if, t_inst;
-//
-//        switch(Integer.valueOf(s)) {
-//            case 0:
-//                t_inst = pilha_aux.pop();
-//                System.out.println("Codigo intermediario gerado com sucesso:" + t_inst.getCode());
-//            case 1:
-//                t_if = pilha_aux.pop();
-//                t_inst = pilha_aux.pop();
-//                t_prod.setCode(t_if.getCode() + "\n" + t_inst.getCode());
-//                break;
-//            default:
-//                System.out.println(s);
-//        }
-//    }
-
     private String[] parserCell(String celula, int position, String name) {
         if (celula.equals("ERROR")) {
             List<String> list = get_expected_types(position);
@@ -174,7 +158,7 @@ class SyntacticAnalyzer {
     private int popInt() {
         LOGGER.finest("desempilhando valor inteiro");
         Token aux = pilha.pop();
-        int value = Integer.valueOf(aux.getValue());
+        int value = Integer.valueOf(aux.getValor());
         LOGGER.finest("valor inteiro desempilhado: "+ value);
         return value;
     }

@@ -1,67 +1,163 @@
 package com.yo;
 
 public class Token {
+    private String atributo;
+    private String valor;
+    private String erro = "";
+    private int l;
 
-    private String attribute;
-    private String value;
-    private String error = "";
-    private String code = "";
-    private int row;
+    // ATRIBUTOS PARA ANALISE SEMANTICA
 
-    Token(String attribute, String value, int row) {
-        this.attribute = attribute;
-        this.value = value;
-        this.row = row;
+    private String local = "";
+    private String operador = ""; // para tratar do caso de operações relacionais
+    private String codigo = "";
+    private String verdadeiro = "";
+    private String falso = "";
+    private String tipo = "";
+    private int indice = 0;
+    private String inicio = "";
+    private String fim = "";
+
+    public Token(String atributo, String valor, int l) {
+        this.atributo = atributo;
+        this.valor = valor;
+        this.l = l;
     }
 
     public Token(String atributo, String valor) {
-        this.attribute = atributo;
-        this.value = valor;
+        this.atributo = atributo;
+        this.valor = valor;
+        this.l = 0;
     }
 
-    public String getAttribute() {
-        return this.attribute;
+
+    public void concatenarCodigo(String codigo){
+        this.codigo.concat(codigo);
     }
 
-    void setAttribute(String attribute) {
-        this.attribute = attribute;
+    public void concatenarCodigo(String codigo, String codigo2){
+        this.codigo.concat(" ");
+        this.codigo.concat(codigo);
+        this.codigo.concat(" ");
+        this.codigo.concat(codigo2);
     }
 
-    String getValue() {
-        return this.value;
+    public String getAtributo() {
+        return atributo;
+    }
+
+    void setAtributo(String atributo) {
+        this.atributo = atributo;
+    }
+
+    String getValor() {
+        return valor;
     }
 
     @Override
     public String toString() {
-        if(this.error.equals("")) {
-            return "<" + this.attribute + ", " + this.value + ">";
+        String res = "";
+        if(this.erro == ""){
+            return "[" + atributo + ", " + valor + "]";
         } else {
-            if(this.value != null) {
-                return "<" + this.attribute + ", " + this.error + ", Char: '" + this.value +"', row: "+ this.row +">";
+            if(this.valor!=null){
+                return "[" + atributo + ", " + this.erro + ", Char: '" + this.valor +"', linha: "+ this.l + "]";
             }
-            return "<" + this.attribute + ", " + this.error + ", row: "+ this.row + ", column: "+">";
+            return "[" + atributo + ", " + this.erro + ", linha: "+ this.l + "]";
         }
     }
 
-    void setValue(String value) { this.value = value; }
-
-    String getError() { return this.error; }
-
-    void setError(String error) {
-        this.error = error;
+    void setValor(String valor) {
+        this.valor = valor;
     }
 
-    public int getRow() {
-        return this.row;
+    String getErro() {
+        return erro;
     }
 
-    void setRow(int row) { this.row = row; }
+    void setErro(String erro) {
+        this.erro = erro;
+    }
 
-    void setCode(String code) {
-        this.code = code;
+    public int getL() {
+        return l;
     }
-    String getCode() {
-        return this.code;
+
+    void setL(int l) {
+        this.l = l;
     }
+
+    public String getLocal() {
+        return local;
+    }
+
+    public void setLocal(String local) {
+        this.local = local;
+    }
+
+    String getCodigo() {
+        return codigo;
+    }
+
+    void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public String getVerdadeiro() {
+        return verdadeiro;
+    }
+
+    public void setVerdadeiro(String verdadeiro) {
+        this.verdadeiro = verdadeiro;
+    }
+
+    public String getFalso() {
+        return falso;
+    }
+
+    public void setFalso(String falso) {
+        this.falso = falso;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public int getIndice() {
+        return indice;
+    }
+
+    public void setIndice(int indice) {
+        this.indice = indice;
+    }
+
+    public String getInicio() {
+        return inicio;
+    }
+
+    public void setInicio(String inicio) {
+        this.inicio = inicio;
+    }
+
+    public String getFim() {
+        return fim;
+    }
+
+    public void setFim(String fim) {
+        this.fim = fim;
+    }
+
+    public String getOperador() {
+        return operador;
+    }
+
+    public void setOperador(String operador) {
+        this.operador = operador;
+    }
+
 
 }

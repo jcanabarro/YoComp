@@ -1,10 +1,7 @@
 yogod() {
 
-    yoint n
-    yofloat b
     yoint a
+    a = 10
 
-    holy(a) {
-        printfi("aaaaa")
-    }
+solado
 }

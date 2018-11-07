@@ -8,17 +8,17 @@ class SemanticAnalyzer {
         Token t_prod = new Token("nao_terminal", prod);
 
         Token t_if, t_inst;
-
+        System.out.println(prod + ' ' + s);
         switch(Integer.valueOf(s)) {
-            case 0:
+            case 1: // YOGOD
                 t_inst = pilha_aux.pop();
-                System.out.println("Codigo intermediario gerado com sucesso:" + t_inst.getCode());
-            case 1:
+                System.out.println("Codigo intermediario gerado com sucesso:" + t_inst.getCodigo());
+            case 24:
                 t_if = pilha_aux.pop();
                 t_inst = pilha_aux.pop();
-                t_prod.setCode(t_if.getCode() + "\n" + t_inst.getCode());
+                t_prod.setCodigo(t_if.getCodigo() + "\n" + t_inst.getCodigo());
                 break;
-            default:
+            case 9:
                 break;
         }
     }
