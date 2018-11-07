@@ -4,7 +4,10 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Stack;
+import java.util.Objects;
+import java.util.ArrayList;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +37,6 @@ class SyntacticAnalyzer {
         tokens.add(new Token("vazio", "$", 0));
         LOGGER.info("Inicializando Analise");
         while (i < tokens.size()) {
-
             LOGGER.info("<b>Verificando token " + i + "</b>");
             LOGGER.info("Pilha: " + prodLog(this.pilha.toString()));
             int s = popInt();
@@ -45,10 +47,12 @@ class SyntacticAnalyzer {
 
             LOGGER.info("Token lido: " + a);
             String celula = cellValue(s, a, true);
+            if (celula == null) {
+                return false;
+            }
             LOGGER.info("Valor na celula [" + s + ", " + a + "]: " + celula);
-            String[] parser = parserCell(celula, s);
+            String[] parser = parserCell(celula, s, a);
             if (parser == null) {
-                LOGGER.warning("Parser nulo, estado de erro.");
                 return false;
             }
             switch (parser[0]) {
@@ -93,17 +97,10 @@ class SyntacticAnalyzer {
         return false;
     }
 
-    private String[] parserCell(String celula, int position) {
-        if (celula == null || celula.equals("")) {
-
-            List<String> list = new ArrayList<>();
-            int len = this.tabela.get(position).length;
-            for(int i = 1; i <= len - 1; i++){
-                if (!this.tabela.get(position)[i].equals("")){
-                    list.add(this.cabecalhoTabela[i]);
-                }
-            }
-            LOGGER.warning("celula vazia, era esperado: " + String.valueOf(list));
+    private String[] parserCell(String celula, int position, String name) {
+        if (celula.equals("ERROR")) {
+            List<String> list = get_expected_types(position);
+            LOGGER.warning("Celula vazia, era esperado: " + String.valueOf(list) + " mas foi lido: " + name);
             return null;
         }
         String[] res = new String[2];
@@ -111,6 +108,34 @@ class SyntacticAnalyzer {
         res[1] = celula.substring(1);
         LOGGER.finest("parser: [" + res[0] + ", " + res[1] + "]");
         return res;
+    }
+
+    private String cellValue(int state, String name, boolean isTable) {
+        int index = getIndexTable(name, isTable);
+        if (index < 0 || state < 0)
+            return null;
+        if (isTable) {
+            if (this.tabela.get(state)[index].equals("ERROR")) {
+                List<String> list = get_expected_types(state);
+                LOGGER.warning("celula vazia, era esperado: " + String.valueOf(list) + " mas foi lido: " + name);
+                return null;
+            }
+            return this.tabela.get(state)[index];
+
+        } else {
+            return this.producoes.get(state)[index];
+        }
+    }
+
+    private List<String> get_expected_types(int position) {
+        List<String> list = new ArrayList<>();
+//        Use 44 because is the max size of non-null terminal
+        for(int i = 1; i <= 44; i++){
+            if (!this.tabela.get(position)[i].equals("ERROR")){
+                list.add(this.cabecalhoTabela[i]);
+            }
+        }
+        return list;
     }
 
     private int popInt() {
@@ -150,17 +175,6 @@ class SyntacticAnalyzer {
         return -1;
     }
 
-    private String cellValue(int state, String name, boolean isTable) {
-        int index = getIndexTable(name, isTable);
-        if (index < 0 || state < 0)
-            return null;
-        if (isTable) {
-            return this.tabela.get(state)[index];
-        } else {
-            return this.producoes.get(state)[index];
-        }
-    }
-
     private String prodLog(String prod) {
         String str = prod.replaceAll("<", "&lt;");
         return str.replaceAll(">", "&gt;");
@@ -173,12 +187,10 @@ class SyntacticAnalyzer {
         String csvDivisor = ",";
         List<String[]> Tabela = null;
         try {
-
             br = new BufferedReader(new FileReader(filename));
             LOGGER.info("Arquivo " + filename + " aberto com sucesso");
             Tabela = new ArrayList<>();
             LOGGER.finest("Tabela inicializada");
-            //GAMBIARRA LIXO PQ JAVA É LIXO
             if (isTable) {
                 this.cabecalhoTabela = br.readLine().split(csvDivisor);
                 LOGGER.finest("Lido o cabecalho da tabela");
@@ -187,7 +199,6 @@ class SyntacticAnalyzer {
                 LOGGER.finest("Lido o cabecalho das producões");
             }
             while ((linha = br.readLine()) != null) {
-
                 String[] line = linha.split(csvDivisor);
                 StringBuilder str = new StringBuilder("Linha lida: [");
                 for (String s : line) {
