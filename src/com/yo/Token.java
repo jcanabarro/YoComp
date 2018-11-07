@@ -56,8 +56,7 @@ public class Token {
 
     @Override
     public String toString() {
-        String res = "";
-        if(this.erro == ""){
+        if(this.erro.equals("")){
             return "[" + atributo + ", " + valor + "]";
         } else {
             if(this.valor!=null){

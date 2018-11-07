@@ -1,7 +1,9 @@
 yogod() {
 
     yoint a
-    a = 10
+
+    a = b + 10
+
 
 solado
 }
