@@ -6,8 +6,8 @@ import java.util.List;
 
 public class Main {
 
-    private static final String csvTable = "SLR/SLR.csv";
-    private static final String csvProduction = "SLR/Producoes.csv";
+    private static final String csvTable = "SLR/TabelaSLR.csv";
+    private static final String csvProduction = "SLR/ProducoesSLR.csv";
 
     public static void main(String[] args) {
         if (args[0].equals("-yo")) {

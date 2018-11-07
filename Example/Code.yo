@@ -1,3 +1,31 @@
 yogod() {
-    solado ;
+
+    yoint n
+    yofloat b
+    yoint a
+
+    holy(a) {
+        printfi("aaaaa")
+    }
+
+    eoq( x + y > b ) {
+        printfi(b)
+    } trab {
+        eoq( b > 0 ){
+            printfi(c)
+        }
+        a = a + a
+    }
+
+    a = b + b
+
+    circo(a) {
+        soled 1: a break
+        soled a: a break
+        soled false: a break
+    }
+
+    fon ( i = 1; i < 10; i++){
+        i = i + a
+    }
 }
