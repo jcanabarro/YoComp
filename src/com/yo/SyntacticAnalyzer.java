@@ -85,22 +85,10 @@ class SyntacticAnalyzer {
 
                     LOGGER.info("pilha auxiliar: "+ prodLog(pilha_aux.toString()));
 
-                    Token t_prod = new Token("nao_terminal", prod);
+                    // Here we apply the semantic analysis
+                    SemanticAnalyzer semantic = new SemanticAnalyzer();
+                    semantic.codeGenerator(parser[1], prod, pilha_aux);
 
-                    Token t_if, t_inst;
-
-                    switch(Integer.valueOf(parser[1])) {
-                        case 0:
-                            t_inst = pilha_aux.pop();
-                            System.out.println("Codigo intermediario gerado com sucesso:" + t_inst.getCode());
-                        case 1:
-                            t_if = pilha_aux.pop();
-                            t_inst = pilha_aux.pop();
-                            t_prod.setCode(t_if.getCode() + "\n" + t_inst.getCode());
-                            break;
-                        default:
-                            System.out.println(parser[1]);
-                    }
                     int s1 = popInt();
                     pushInt(s1);
                     LOGGER.info("Topo da pilha: " + s1);
@@ -122,6 +110,25 @@ class SyntacticAnalyzer {
         LOGGER.info("analise terminada, string recusada");
         return false;
     }
+
+//    private void codeGenerator(String s, String prod, Stack<Token> pilha_aux) {
+//        Token t_prod = new Token("nao_terminal", prod);
+//
+//        Token t_if, t_inst;
+//
+//        switch(Integer.valueOf(s)) {
+//            case 0:
+//                t_inst = pilha_aux.pop();
+//                System.out.println("Codigo intermediario gerado com sucesso:" + t_inst.getCode());
+//            case 1:
+//                t_if = pilha_aux.pop();
+//                t_inst = pilha_aux.pop();
+//                t_prod.setCode(t_if.getCode() + "\n" + t_inst.getCode());
+//                break;
+//            default:
+//                System.out.println(s);
+//        }
+//    }
 
     private String[] parserCell(String celula, int position, String name) {
         if (celula.equals("ERROR")) {
