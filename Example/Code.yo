@@ -2,8 +2,7 @@ yogod() {
 
     yoint a
 
-    a = 10 + 10
-
+    scanfi(a)
 
 solado
 }
