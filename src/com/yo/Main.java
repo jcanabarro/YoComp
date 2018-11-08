@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Main {
-    // TODO: Falar com o Brendo no caso de operacoes de id com valores ta dando problemas
-    // TODO: Esta faltando variaveis booleanas nas producoes
     private static final String csvTable = "SLR/TabelaSLR.csv";
     private static final String csvProduction = "SLR/ProducoesSLR.csv";
 

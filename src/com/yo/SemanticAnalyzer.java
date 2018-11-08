@@ -128,7 +128,6 @@ class SemanticAnalyzer {
                 break;
             case 49: //
                 break;
-
             case 67: // Reserved word solado
                 token = pilha.pop();
                 t_prod.setCodigo(token.getValor());
