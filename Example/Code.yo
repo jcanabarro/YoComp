@@ -2,7 +2,9 @@ yogod() {
 
     yoint a
 
-    scanfi(a)
+    fon(a = 0; a < 10; a++ ) {
+        a = 10 + 10
+    }
 
 solado
 }

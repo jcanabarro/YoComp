@@ -27,7 +27,7 @@ public class Main {
 
                 LexicalAnalyzer lexical = new LexicalAnalyzer(file, reservedWord, symbols, specialOperators);
                 List<Token> tokens = lexical.analyser();
-                System.out.println(tokens);
+//                System.out.println(tokens);
                 SyntacticAnalyzer syntactical = new SyntacticAnalyzer(csvTable, csvProduction);
                 System.out.println(syntactical.Analyzer(tokens));
             } catch (IOException e) {

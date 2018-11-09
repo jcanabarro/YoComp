@@ -2,35 +2,32 @@ package com.yo;
 
 import java.util.Stack;
 
+// Verificar se o END vai dar erro nos casos de expressoes
+
 class SemanticAnalyzer {
 
     void codeGenerator(String s, String prod, Stack<Token> pilha) {
         Token t_prod = new Token("nao_terminal", prod);
 
-        Token token_statement, token_expr, token_end, t_inst, token, token_if, token_else, token_else_expr;
-
-//        System.out.println(prod +" "+ s);
-//        System.out.println(pilha);
+        Token token_statement, token_expr, t_inst, token, token_if, token_else, token_else_expr;
+//        System.out.println(prod+" "+s);
         switch(Integer.valueOf(s)) {
             case 1:
                 t_inst = pilha.pop();
-//                System.out.println("Codigo intermediario gerado com sucesso:" + t_inst.getCodigo());
+                System.out.println("Codigo intermediario gerado com sucesso");
                 break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-            case 5:
-                break;
-            case 6:
-                break;
-            case 7:
+            case 2: break;
+            case 3: break;
+            case 4: break;
+            case 5: break;
+            case 6: break;
+            case 7: // attributions
+            case 8: // attributions
+                Token token_attr, token_equals;
+                token_attr = pilha.pop();
+                token_equals = pilha.pop();
                 token = pilha.pop();
-                t_prod.setCodigo(token.getValor());
-                break;
-            case 8:
+                t_prod.setCodigo(token_attr.getValor() + " " + token_equals.getValor() + " " + token.getValor());
                 break;
             case 9: // Reserved word yoint
             case 10: // Reserved word yofloat
@@ -54,46 +51,107 @@ class SemanticAnalyzer {
             case 17: // False value
                 value_declaration(pilha, t_prod, "bool");
                 break;
-            case 21:
-                System.out.println(prod +" "+ s);
-                System.out.println(pilha);
+            case 18: break;
+            case 19: break;
+            case 20: // SCANF
+            case 21: // PRINTF
+            case 22: // SCANF
+            case 23: // PRINTF
+                inOutFormat(pilha, t_prod);
                 break;
-            case 22:
-            case 23:
+            case 24: // OUTPUTVALUE == id
+            case 25: // OUTPUTVALUE == string
+            case 26: // OUTPUTVALUE == TIPO
+                token = pilha.pop();
+                t_prod.setCodigo(token.getValor());
                 break;
-            case 25: // IF eoq(STMT) {EXPR} END
-            case 26:
+            case 27: // IF
+            case 28: // IF
                 formatExpression(pilha, t_prod);
                 break;
-            case 27:
-            case 28:
-                token_if = pilha.pop();
-                pilha.pop();
-                token_statement = pilha.pop();
-                pilha.pop();
-                pilha.pop();
-                token_expr = pilha.pop();
-                pilha.pop();
-                token_else = pilha.pop();
-                pilha.pop();
-                token_else_expr = pilha.pop();
-//                pilha.pop();
-//                token_end = pilha.pop(); Maybe this will be necessary in near future
-                t_prod.setCodigo(token_if.getValor() + " " + token_statement.getValor() + "\n\t" + token_expr.getValor()
-                        + "\n" + token_else.getValor() + "\n\t" + token_else_expr.getValor());
+            case 29: // IF ELSE
+            case 30: // IF ELSE
+                formatIfElse(pilha, t_prod);
                 break;
-            case 29:
-            case 30:
+
+            case 31: // WHILE
+            case 32: // WHILE
                 formatExpression(pilha, t_prod);
                 break;
-            case 31:
-            case 32:
+            case 33: // FOR
+            case 34: // FOR
+                formatFor(pilha, t_prod);
                 break;
-            case 33:
-            case 34:
+            case 35: // SWITCH
+            case 36: // SWITCH
                 formatExpression(pilha, t_prod);
+                break;
+            case 37: // CASE
+            case 38: // CASE
+                formatCase(pilha, t_prod);
                 break;
         }
+    }
+
+    private void formatIfElse(Stack<Token> pilha, Token t_prod) {
+        Token token_if;
+        Token token_statement;
+        Token token_expr;
+        Token token_else;
+        Token token_else_expr;
+        token_if = pilha.pop();
+        pilha.pop();
+        token_statement = pilha.pop();
+        pilha.pop();
+        pilha.pop();
+        token_expr = pilha.pop();
+        pilha.pop();
+        token_else = pilha.pop();
+        pilha.pop();
+        token_else_expr = pilha.pop();
+        t_prod.setCodigo(token_if.getValor() + " " + token_statement.getValor() + "\n\t" + token_expr.getValor()
+                + "\n" + token_else.getValor() + "\n\t" + token_else_expr.getValor());
+    }
+
+    private void formatFor(Stack<Token> pilha, Token t_prod) {
+        Token token;
+        Token token_for, token_equals, token_valor, token_oprelacional, token_valor1, token_unario;
+        token_for = pilha.pop();
+        pilha.pop();
+        token = pilha.pop();
+        token_equals = pilha.pop();
+        token_valor = pilha.pop();
+        pilha.pop();
+        pilha.pop();
+        token_oprelacional = pilha.pop();
+        token_valor1 = pilha.pop();
+        pilha.pop();
+        token_unario = pilha.pop();
+
+        t_prod.setCodigo(token_for.getValor() + " " + token.getValor() + " " + token_equals.getValor()
+        + " " + token_valor.getValor() + " " + token.getValor() + " " + token_oprelacional.getValor() +
+        " " +token_valor1.getValor() + " " + token_unario.getValor());
+    }
+
+    private void formatCase(Stack<Token> pilha, Token t_prod) {
+        Token token;
+        Token token_case, token_break;
+        token_case = pilha.pop();
+        token = pilha.pop();
+        pilha.pop();
+        pilha.pop();
+        token_break = pilha.pop();
+        t_prod.setCodigo(token_case.getValor() + " " + token.getValor() + " " + token_break.getValor());
+    }
+
+    private void inOutFormat(Stack<Token> pilha, Token t_prod) {
+        Token token_in_out;
+        Token token;
+        token_in_out = pilha.pop();
+        pilha.pop();
+        token = pilha.pop();
+        pilha.pop();
+        t_prod.setCodigo(token_in_out.getValor() + " " + token.getValor());
     }
 
     private void value_declaration(Stack<Token> pilha, Token t_prod, String type) {
@@ -113,8 +171,6 @@ class SemanticAnalyzer {
         pilha.pop();
         pilha.pop();
         token_expr = pilha.pop();
-//        pilha.pop();
-//        token_end = pilha.pop(); Maybe this will be necessary in near future
         t_prod.setCodigo(token_if.getValor() + " " + token_statement.getValor() + "\n\t" + token_expr.getValor());
     }
 }
