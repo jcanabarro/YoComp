@@ -9,14 +9,19 @@ class SemanticAnalyzer {
     void codeGenerator(String s, String prod, Stack<Token> pilha) {
         Token t_prod = new Token("nao_terminal", prod);
 
-        Token token_statement, token_expr, t_inst, token, token_if, token_else, token_else_expr;
+        Token t_inst, token;
 //        System.out.println(prod+" "+s);
         switch(Integer.valueOf(s)) {
             case 1:
                 t_inst = pilha.pop();
                 System.out.println("Codigo intermediario gerado com sucesso");
                 break;
-            case 2: break;
+            case 2:
+                Token token_type;
+                token_type = pilha.pop();
+                token = pilha.pop();
+                t_prod.setCodigo(token_type.getValor() + " " + token.getValor());
+                break;
             case 3: break;
             case 4: break;
             case 5: break;
@@ -25,9 +30,9 @@ class SemanticAnalyzer {
             case 8: // attributions
                 Token token_attr, token_equals;
                 token_attr = pilha.pop();
-                token_equals = pilha.pop();
+                t_prod.setOperador(pilha.pop().getValor());
                 token = pilha.pop();
-                t_prod.setCodigo(token_attr.getValor() + " " + token_equals.getValor() + " " + token.getValor());
+                t_prod.setCodigo(token_attr.getValor() + " " + token.getValor());
                 break;
             case 9: // Reserved word yoint
             case 10: // Reserved word yofloat
@@ -73,7 +78,6 @@ class SemanticAnalyzer {
             case 30: // IF ELSE
                 formatIfElse(pilha, t_prod);
                 break;
-
             case 31: // WHILE
             case 32: // WHILE
                 formatExpression(pilha, t_prod);
@@ -90,7 +94,33 @@ class SemanticAnalyzer {
             case 38: // CASE
                 formatCase(pilha, t_prod);
                 break;
+            case 57:
+            case 58:
+            case 59:
+            case 60:
+            case 61:
+            case 62:
+                formatOperation(pilha, t_prod, "bool");
+                break;
+            case 63:
+            case 64:
+            case 65:
+            case 66:
+                formatOperation(pilha, t_prod, "int");
+                break;
+            case 67:
+            case 68:
+                formatOperation(pilha, t_prod, "bool");
+                break;
         }
+    }
+
+    private void formatOperation(Stack<Token> pilha, Token t_prod, String type) {
+        Token t_op;
+        t_op = pilha.pop();
+        t_prod.setCodigo(t_op.getValor());
+        t_prod.setTipo(type);
+        t_prod.setOperador(t_op.getValor());
     }
 
     private void formatIfElse(Stack<Token> pilha, Token t_prod) {
