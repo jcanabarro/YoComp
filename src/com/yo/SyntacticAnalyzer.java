@@ -32,7 +32,7 @@ class SyntacticAnalyzer {
         pushInt(0);
     }
 
-    public boolean Analyzer(List<Token> tokens) {
+    boolean Analyzer(List<Token> tokens) {
         int i = 0;
         tokens.add(new Token("vazio", "$", 0));
         LOGGER.info("Inicializando Analise");
@@ -90,12 +90,13 @@ class SyntacticAnalyzer {
 
                     // Here we apply the semantic analysis
                     SemanticAnalyzer semantic = new SemanticAnalyzer();
-                    semantic.codeGenerator(parser[1], prod, pilha_aux);
+                    Token semanticToken;
+                    semanticToken = semantic.codeGenerator(parser[1], prod, pilha_aux);
 
                     int s1 = popInt();
                     pushInt(s1);
                     LOGGER.info("Topo da pilha: " + s1);
-                    this.pilha.push(new Token("", prod));
+                    this.pilha.push(semanticToken);
                     LOGGER.info("Empilhando producao: " + prodLog(prod));
                     String desvio = cellValue(s1, prod, true);
                     LOGGER.info("Desvio[" + s1 + ", " + prodLog(prod) + "]: " + desvio);

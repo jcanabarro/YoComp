@@ -2,8 +2,8 @@ yogod() {
 
     yoint a
 
-    fon(a = 0; a < 10; a++ ) {
-        a = 10 + 10
+    eoq(a < 10){
+        printfi(a)
     }
 
 solado

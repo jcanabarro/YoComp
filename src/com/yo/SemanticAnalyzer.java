@@ -6,11 +6,12 @@ import java.util.Stack;
 
 class SemanticAnalyzer {
 
-    void codeGenerator(String s, String prod, Stack<Token> pilha) {
+    Token codeGenerator(String s, String prod, Stack<Token> pilha) {
         Token t_prod = new Token("nao_terminal", prod);
 
         Token t_inst, token;
-//        System.out.println(prod+" "+s);
+        System.out.print(prod + " " + s + " Pilha: ");
+        System.out.println(pilha);
         switch(Integer.valueOf(s)) {
             case 1:
                 t_inst = pilha.pop();
@@ -94,6 +95,8 @@ class SemanticAnalyzer {
             case 38: // CASE
                 formatCase(pilha, t_prod);
                 break;
+            case 53:
+                break;
             case 57:
             case 58:
             case 59:
@@ -113,6 +116,7 @@ class SemanticAnalyzer {
                 formatOperation(pilha, t_prod, "bool");
                 break;
         }
+        return t_prod;
     }
 
     private void formatOperation(Stack<Token> pilha, Token t_prod, String type) {
