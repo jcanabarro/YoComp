@@ -2,8 +2,10 @@ yogod() {
 
     yoint a
 
-    eoq(a < 10){
+    eoq(8 < 10){
         printfi(a)
+    } trab {
+        scanfi(a)
     }
 
 solado

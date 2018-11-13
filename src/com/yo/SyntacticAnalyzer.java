@@ -80,10 +80,10 @@ class SyntacticAnalyzer {
                     for (int j = 0; j < tamanho; j++) {
                         p = pilha.pop();
                         LOGGER.finest("desempilhando: " + p);
-                        if(j%2==1) {
+                        if(!p.getAtributo().equals(""))
                             pilha_aux.push(p);
-                        }
                     }
+
                     LOGGER.finest("tamanho pilha auxiliar: "+ pilha_aux.size());
 
                     LOGGER.info("pilha auxiliar: "+ prodLog(pilha_aux.toString()));
