@@ -2,7 +2,9 @@ package com.yo;
 
 import java.util.Stack;
 
-// Verificar se o END vai dar erro nos casos de expressoes
+// TODO: Need apply 3 end code to expressions
+// TODO: Need apply type verification
+// TODO: Verify if productions with non-terminal END will case some problems
 
 class SemanticAnalyzer {
 
@@ -13,8 +15,6 @@ class SemanticAnalyzer {
         Token t_prod = new Token("nao_terminal", prod);
 
         Token token;
-//        System.out.println(prod + " " + s);
-//        System.out.println(pilha);
         switch(Integer.valueOf(s)) {
             case 1:
                 System.out.println("Codigo intermediario gerado com sucesso");
@@ -35,9 +35,9 @@ class SemanticAnalyzer {
             case 8: // attributions
                 Token token_attr;
                 token_attr = pilha.pop();
-                t_prod.setOperador(pilha.pop().getValor());
+                pilha.pop();
                 token = pilha.pop();
-                t_prod.setCodigo(token_attr.getValor() + " " + token.getValor());
+                t_prod.setCodigo(token_attr.getValor() + " = " + token.getCodigo());
                 break;
             case 9: // Reserved word yoint
             case 10: // Reserved word yofloat
@@ -79,7 +79,7 @@ class SemanticAnalyzer {
                 break;
             case 27: // IF
             case 28: // IF
-                formatExpression(pilha, t_prod);
+                formatIf(pilha, t_prod);
                 break;
             case 29: // IF ELSE
             case 30: // IF ELSE
@@ -87,7 +87,7 @@ class SemanticAnalyzer {
                 break;
             case 31: // WHILE
             case 32: // WHILE
-                formatExpression(pilha, t_prod);
+                formatWhile(pilha, t_prod);
                 break;
             case 33: // FOR
             case 34: // FOR
@@ -95,7 +95,7 @@ class SemanticAnalyzer {
                 break;
             case 35: // SWITCH
             case 36: // SWITCH
-                formatExpression(pilha, t_prod);
+                formatSwitch(pilha, t_prod);
                 break;
             case 37: // CASE
             case 38: // CASE
@@ -115,12 +115,30 @@ class SemanticAnalyzer {
                 token = pilha.pop();
                 t_prod.setCodigo(token.getCodigo());
                 break;
+            case 46:
+                token = pilha.pop();
+                t_prod.setCodigo(token.getValor());
+                break;
+            case 47:
+                pilha.pop();
+                token = pilha.pop();
+                t_prod.setCodigo("(" + token.getCodigo() + ")");
+                break;
+            case 48:
+            case 49:
+            case 50:
+            case 51:
+                formatExpression(pilha, t_prod);
+                break;
+            case 52:
+                Token negative;
+                negative = pilha.pop();
+                token = pilha.pop();
+                t_prod.setCodigo(negative.getValor() + token.getCodigo());
+                break;
             case 53:
-                Token first_value, expression, second_value;
-                first_value = pilha.pop();
-                expression = pilha.pop();
-                second_value = pilha.pop();
-                t_prod.setCodigo(first_value.getCodigo() + " " + expression.getCodigo() + " " + second_value.getCodigo());
+            case 54:
+                formatExpression(pilha, t_prod);
                 break;
             case 55:
                 token = pilha.pop();
@@ -148,11 +166,48 @@ class SemanticAnalyzer {
             case 68:
                 formatOperation(pilha, t_prod, "bool");
                 break;
+            case 69:
+            case 70:
+                token = pilha.pop();
+                t_prod.setCodigo(token.getValor() + pilha.pop().getValor());
+                break;
+            case 71: break;
             case 72: break;
         }
-        if(!t_prod.getCodigo().equals(""))
-            System.out.println(t_prod.getCodigo());
+//        if(!t_prod.getCodigo().equals(""))
+//            System.out.println(t_prod.getCodigo());
         return t_prod;
+    }
+
+    private void formatExpression(Stack<Token> pilha, Token t_prod) {
+        Token first_value, expression, second_value;
+        first_value = pilha.pop();
+        expression = pilha.pop();
+        second_value = pilha.pop();
+        t_prod.setCodigo(first_value.getCodigo() + " " + expression.getCodigo() + " " + second_value.getCodigo());
+    }
+
+    private void formatWhile(Stack<Token> pilha, Token t_prod) {
+        Token token_statement, token_expr;
+        pilha.pop();
+        pilha.pop();
+        token_statement = pilha.pop();
+        pilha.pop();
+        pilha.pop();
+        token_expr = pilha.pop();
+        t_prod.setInicio(this.getLabelCounter());
+        t_prod.setFim(this.getLabelCounter());
+        codigo = t_prod.getInicio() + " : \n";
+        codigo += "if " + token_statement.getCodigo() + " = false goto "+ t_prod.getFim() + "\n";
+        codigo += token_expr.getCodigo() + "\n"+ "goto "+ t_prod.getInicio() + "\n" + t_prod.getFim()+" : ";
+        t_prod.setCodigo(codigo);
+    }
+
+    // TODO remove this, because this it's only for debug, just only for the final version
+    private void printAttr(Token token_attr) {
+        System.out.println(token_attr.getCodigo());
+        System.out.println(token_attr.getAtributo());
+        System.out.println(token_attr.getValor());
     }
 
     private void formatOperation(Stack<Token> pilha, Token t_prod, String type) {
@@ -164,23 +219,31 @@ class SemanticAnalyzer {
     }
 
     private void formatFor(Stack<Token> pilha, Token t_prod) {
-        Token token;
-        Token token_for, token_equals, token_valor, token_oprelacional, token_valor1, token_unario;
-        token_for = pilha.pop();
-        pilha.pop();
-        token = pilha.pop();
-        token_equals = pilha.pop();
-        token_valor = pilha.pop();
+        Token iter_var,op_relational, stop_value, unary_value, expr;
         pilha.pop();
         pilha.pop();
-        token_oprelacional = pilha.pop();
-        token_valor1 = pilha.pop();
+        iter_var = pilha.pop();
         pilha.pop();
-        token_unario = pilha.pop();
-
-        t_prod.setCodigo(token_for.getValor() + " " + token.getValor() + " " + token_equals.getValor()
-        + " " + token_valor.getValor() + " " + token.getValor() + " " + token_oprelacional.getValor() +
-        " " +token_valor1.getValor() + " " + token_unario.getValor());
+        pilha.pop();
+        pilha.pop();
+        pilha.pop();
+        op_relational = pilha.pop();
+        stop_value = pilha.pop();
+        pilha.pop();
+        unary_value = pilha.pop();
+        pilha.pop();
+        pilha.pop();
+        expr = pilha.pop();
+        String stop_condition = iter_var.getValor() + " " + op_relational.getCodigo() + " " + stop_value.getCodigo();
+        t_prod.setInicio(this.getLabelCounter());
+        t_prod.setFim(this.getLabelCounter());
+        codigo = "";
+        codigo += t_prod.getInicio() + " : \n";
+        codigo += expr.getCodigo() + "\n";
+        codigo += "if " + stop_condition + " = false goto " + t_prod.getFim() + "\n";
+        codigo += unary_value.getCodigo() + "\n"+ "goto "+ t_prod.getInicio() + "\n" + t_prod.getFim()+" : ";
+        t_prod.setCodigo(codigo);
+        System.out.println(t_prod.getCodigo());
     }
 
     private void formatCase(Stack<Token> pilha, Token t_prod) {
@@ -214,7 +277,11 @@ class SemanticAnalyzer {
             t_prod.setCodigo("read " + token.getValor());
     }
 
-    private void formatExpression(Stack<Token> pilha, Token t_prod) {
+    private void formatSwitch(Stack<Token> pilha, Token t_prod) {
+
+    }
+
+    private void formatIf(Stack<Token> pilha, Token t_prod) {
         Token token_statement, token_expr;
         pilha.pop();
         pilha.pop();
@@ -230,6 +297,7 @@ class SemanticAnalyzer {
         codigo += t_prod.getFalso() + " : \n";
         t_prod.setCodigo(codigo);
     }
+
 
     private void formatIfElse(Stack<Token> pilha, Token t_prod) {
         Token token_statement;
