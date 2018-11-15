@@ -125,26 +125,14 @@ class SemanticAnalyzer {
             case 40: // CASE
                 break;
             case 41:
-                token = pilha.pop();
-                t_prod.setCodigo(token.getCodigo());
-                t_prod.setTipo(token.getTipo());
-                break;
             case 42:
-                token = pilha.pop();
-                t_prod.setCodigo(token.getCodigo());
-                t_prod.setTipo(token.getTipo());
-                break;
             case 43:
             case 44:
             case 45:
-                token = pilha.pop();
-                t_prod.setCodigo(token.getCodigo());
-                t_prod.setTipo(token.getTipo());
+                passValueAndType(pilha, t_prod);
                 break;
             case 46:
-                token = pilha.pop();
-                t_prod.setCodigo(token.getValor());
-                t_prod.setTipo(token.getTipo());
+                passValeuAndTypeID(pilha, t_prod);
                 break;
             case 47:
                 pilha.pop();
@@ -169,14 +157,10 @@ class SemanticAnalyzer {
                 formatExpression(pilha, t_prod);
                 break;
             case 55:
-                token = pilha.pop();
-                t_prod.setCodigo(token.getValor());
-                t_prod.setTipo(token.getTipo());
+                passValeuAndTypeID(pilha, t_prod);
                 break;
             case 56:
-                token = pilha.pop();
-                t_prod.setCodigo(token.getCodigo());
-                t_prod.setTipo(token.getTipo());
+                passValueAndType(pilha, t_prod);
                 break;
             case 57:
             case 58:
@@ -211,6 +195,20 @@ class SemanticAnalyzer {
 //        if(!t_prod.getCodigo().equals(""))
 //            System.out.println(t_prod.getCodigo());
         return t_prod;
+    }
+
+    private void passValeuAndTypeID(Stack<Token> pilha, Token t_prod) {
+        Token token;
+        token = pilha.pop();
+        t_prod.setCodigo(token.getValor());
+        t_prod.setTipo(token.getTipo());
+    }
+
+    private void passValueAndType(Stack<Token> pilha, Token t_prod) {
+        Token token;
+        token = pilha.pop();
+        t_prod.setCodigo(token.getCodigo());
+        t_prod.setTipo(token.getTipo());
     }
 
     private List<String> format3End(List<String> assembly_expression, String expr, String attribution) {
