@@ -16,27 +16,48 @@ class SemanticAnalyzer {
     private String code;
     private Integer label_counter;
     private Integer temp_counter;
+    private List<String> variable_declaration;
+    private List<String> variable_type;
 
-    SemanticAnalyzer() {
-        code = "";
-        label_counter = 0;
-        temp_counter = 0;
+    SemanticAnalyzer(List<String> variable_declaration, List<String> variable_type) {
+        this.code = "";
+        this.label_counter = 0;
+        this.temp_counter = 0;
+        this.variable_declaration = variable_declaration;
+        this.variable_type = variable_type;
     }
 
     Token codeGenerator(String s, String prod, Stack<Token> pilha) {
         Token t_prod = new Token("nao_terminal", prod);
 
         Token token;
-        System.out.println(s + " " + prod);
         switch (Integer.valueOf(s)) {
             case 1:
-                System.out.println("Codigo intermediario gerado com sucesso");
+                if (this.variable_type.contains("later")) {
+                    int index = this.variable_type.indexOf("later");
+                    t_prod.setErro("Variavel " + this.variable_declaration.get(index) + " não foi declarada");
+                } else {
+                    System.out.println("Codigo intermediario gerado com sucesso");
+                }
                 break;
             case 2:
                 Token token_type;
                 token_type = pilha.pop();
                 token = pilha.pop();
-                t_prod.setCodigo(token_type.getCodigo() + " " + token.getValor());
+                if (this.variable_declaration.contains(token.getValor())) {
+                    int index = this.variable_declaration.indexOf(token.getValor());
+                    if (this.variable_type.get(index).equals("later")) {
+                        this.variable_type.set(index, token_type.getTipo());
+                    } else if (this.variable_type.get(index).equals(token_type.getTipo())) {
+                        t_prod.setCodigo(token_type.getCodigo() + " " + token.getValor());
+                    } else if (token_type.getTipo().equals("float") && this.variable_type.get(index).equals("int")) {
+                        t_prod.setCodigo(token_type.getCodigo() + " " + token.getValor());
+                    } else {
+                        t_prod.setErro("Uma variavel do tipo " + token_type.getTipo() + " não pode receber um tipo " + this.variable_type.get(index));
+                    }
+                } else {
+                    t_prod.setErro("Variavel " + token.getValor() + " não foi declarada");
+                }
                 break;
             case 3:
             case 4:
@@ -44,6 +65,7 @@ class SemanticAnalyzer {
             case 6:
                 token = pilha.pop();
                 t_prod.setCodigo(token.getCodigo());
+                t_prod.setTipo(token.getTipo());
                 break;
             case 7: // attributions
             case 8: // attributions
@@ -61,14 +83,29 @@ class SemanticAnalyzer {
                     List<String> formattedTac = format3End(expression, tac, token_attr.getValor());
                     code = String.join("\n ", formattedTac);
                 }
+                t_prod.setTipo(token.getTipo());
+                if (!this.variable_declaration.contains(token_attr.getValor())) {
+                    this.variable_declaration.add(token_attr.getValor());
+                }
+                int index = this.variable_declaration.indexOf(token_attr.getValor());
+                if (this.variable_type.size() > index) {
+                    this.variable_type.add(index, token.getTipo());
+                } else {
+                    this.variable_type.add(token.getTipo());
+                }
                 t_prod.setCodigo(code);
                 break;
             case 9: // Reserved word yoint
+                typeDeclaration(pilha, t_prod, "int");
+                break;
             case 10: // Reserved word yofloat
+                typeDeclaration(pilha, t_prod, "float");
+                break;
             case 11: // Reserved word yochar
+                typeDeclaration(pilha, t_prod, "char");
+                break;
             case 12: // Reserved word yochar
-                token = pilha.pop();
-                t_prod.setCodigo(token.getValor());
+                typeDeclaration(pilha, t_prod, "bool");
                 break;
             case 13: // Integer value
                 value_declaration(pilha, t_prod, "int");
@@ -132,7 +169,7 @@ class SemanticAnalyzer {
                 passValueAndType(pilha, t_prod);
                 break;
             case 46:
-                passValeuAndTypeID(pilha, t_prod);
+                passValueAndTypeID(pilha, t_prod);
                 break;
             case 47:
                 pilha.pop();
@@ -157,7 +194,7 @@ class SemanticAnalyzer {
                 formatExpression(pilha, t_prod);
                 break;
             case 55:
-                passValeuAndTypeID(pilha, t_prod);
+                passValueAndTypeID(pilha, t_prod);
                 break;
             case 56:
                 passValueAndType(pilha, t_prod);
@@ -191,23 +228,38 @@ class SemanticAnalyzer {
             case 72:
                 break;
         }
-//        // TODO remover isso depois
+//        // TODO remove this after works are finished
 //        if(!t_prod.getCodigo().equals(""))
 //            System.out.println(t_prod.getCodigo());
         return t_prod;
     }
 
-    private void passValeuAndTypeID(Stack<Token> pilha, Token t_prod) {
+    private void typeDeclaration(Stack<Token> pilha, Token t_prod, String type) {
         Token token;
         token = pilha.pop();
         t_prod.setCodigo(token.getValor());
-        t_prod.setTipo(token.getTipo());
+        t_prod.setTipo(type);
+    }
+
+    private void passValueAndTypeID(Stack<Token> pilha, Token t_prod) {
+        Token token;
+        token = pilha.pop();
+        t_prod.setCodigo(token.getValor());
+        this.variable_declaration.add(token.getValor());
+        this.variable_type.add("later");
     }
 
     private void passValueAndType(Stack<Token> pilha, Token t_prod) {
         Token token;
         token = pilha.pop();
         t_prod.setCodigo(token.getCodigo());
+        if (token.getTipo().isEmpty()) {
+            String[] split_declaration = token.getCodigo().split(" ");
+            if (!this.variable_declaration.contains(split_declaration[0]) && split_declaration.length <= 1) {
+                this.variable_declaration.add(token.getValor());
+                this.variable_type.add("later");
+            }
+        }
         t_prod.setTipo(token.getTipo());
     }
 
@@ -236,13 +288,29 @@ class SemanticAnalyzer {
         second_value = pilha.pop();
         String fv_type = first_value.getTipo();
         String sv_type = second_value.getTipo();
+        // TODO need bool treatment
         if (fv_type.equals(sv_type) || (!fv_type.equals("char") && !sv_type.equals("char"))) {
-            if (fv_type.equals("char") && sv_type.equals("char"))
+            if (fv_type.equals("char") && sv_type.equals("char")) {
                 t_prod.setTipo("char");
-            else if (fv_type.equals("int") && sv_type.equals("int"))
+            } else if (fv_type.equals("int") && sv_type.equals("int")) {
                 t_prod.setTipo("int");
-            else
+            } else if (fv_type.equals("") && !sv_type.equals("")) {
+                t_prod.setTipo(sv_type);
+                if (!this.variable_declaration.contains(first_value.getCodigo())) {
+                    this.variable_declaration.add(first_value.getCodigo());
+                }
+                int index = this.variable_declaration.indexOf(first_value.getCodigo());
+                this.variable_type.add(index, sv_type);
+            } else if (sv_type.equals("") && !fv_type.equals("")) {
+                t_prod.setTipo(fv_type);
+                if (!this.variable_declaration.contains(second_value.getCodigo())) {
+                    this.variable_declaration.add(second_value.getCodigo());
+                }
+                int index = this.variable_declaration.indexOf(second_value.getCodigo());
+                this.variable_type.add(index, fv_type);
+            } else {
                 t_prod.setTipo("float");
+            }
             t_prod.setCodigo(first_value.getCodigo() + " " + expression.getCodigo() + " " + second_value.getCodigo());
         } else {
             t_prod.setCodigo("");

@@ -17,6 +17,8 @@ class SyntacticAnalyzer {
     private List<String[]> producoes;
     private Stack<Token> pilha;
     private List<String> reversed_values;
+    private List<String> variable_declaration;
+    private List<String> variable_type;
 
 
     public SyntacticAnalyzer(String csvTable, String csvProd) throws IOException {
@@ -27,6 +29,8 @@ class SyntacticAnalyzer {
         this.producoes = readCSV(csvProd, false);
         LOGGER.finest("Producões lidas com sucesso");
         this.pilha = new Stack<>();
+        this.variable_declaration = new ArrayList<>();
+        this.variable_type = new ArrayList<>();
         this.reversed_values = Arrays.asList("string", "char", "int", "float", "id");
         LOGGER.finest("Pilha foi inicializada");
         pushInt(0);
@@ -79,9 +83,10 @@ class SyntacticAnalyzer {
                     Token p;
                     for (int j = 0; j < tamanho; j++) {
                         p = pilha.pop();
-                        LOGGER.finest("desempilhando: " + p);
-                        if(!p.getAtributo().equals(""))
+                        if(!p.getAtributo().equals("")) {
+                            LOGGER.finest("desempilhando: " + p);
                             pilha_aux.push(p);
+                        }
                     }
 
                     LOGGER.finest("tamanho pilha auxiliar: "+ pilha_aux.size());
@@ -89,14 +94,13 @@ class SyntacticAnalyzer {
                     LOGGER.info("pilha auxiliar: "+ prodLog(pilha_aux.toString()));
 
                     // Here we apply the semantic analysis
-                    SemanticAnalyzer semantic = new SemanticAnalyzer();
+                    SemanticAnalyzer semantic = new SemanticAnalyzer(this.variable_declaration, this.variable_type);
                     Token semanticToken;
                     semanticToken = semantic.codeGenerator(parser[1], prod, pilha_aux);
 
                     // Semantic Error
                     if (!semanticToken.getErro().equals("")) {
                         LOGGER.warning(semanticToken.getErro());
-                        System.out.println(semanticToken.getErro());
                         return false;
                     }
 

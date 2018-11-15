@@ -1,8 +1,9 @@
 yogod() {
 
-    yoint a
+    yofloat a
+    yoint b
 
-
+    a = b + c
 solado
 }
 
