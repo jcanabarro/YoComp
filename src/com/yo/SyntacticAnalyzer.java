@@ -93,6 +93,13 @@ class SyntacticAnalyzer {
                     Token semanticToken;
                     semanticToken = semantic.codeGenerator(parser[1], prod, pilha_aux);
 
+                    // Semantic Error
+                    if (!semanticToken.getErro().equals("")) {
+                        LOGGER.warning(semanticToken.getErro());
+                        System.out.println(semanticToken.getErro());
+                        return false;
+                    }
+
                     int s1 = popInt();
                     pushInt(s1);
                     LOGGER.info("Topo da pilha: " + s1);

@@ -2,11 +2,6 @@ yogod() {
 
     yoint a
 
-    eoq(a < 2024){
-        a = a + 25 + 23 / 10
-    } trab {
-        a = 2
-    }
 
 solado
 }
