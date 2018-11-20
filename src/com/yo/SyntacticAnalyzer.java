@@ -101,6 +101,7 @@ class SyntacticAnalyzer {
                     // Semantic Error
                     if (!semanticToken.getErro().equals("")) {
                         LOGGER.warning(semanticToken.getErro());
+                        System.out.println(semanticToken.getErro());
                         return false;
                     }
 

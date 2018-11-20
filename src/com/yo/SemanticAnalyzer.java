@@ -1,5 +1,7 @@
 package com.yo;
 
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+
 import java.util.Stack;
 import java.util.List;
 import java.util.ArrayList;
@@ -9,7 +11,6 @@ import java.util.Collections;
 
 // TODO: Need apply 3 end code to expressions
 // TODO: Need apply type verification
-// TODO: Verify if productions with non-terminal END will case some problems
 
 class SemanticAnalyzer {
 
@@ -104,7 +105,7 @@ class SemanticAnalyzer {
             case 11: // Reserved word yochar
                 typeDeclaration(pilha, t_prod, "char");
                 break;
-            case 12: // Reserved word yochar
+            case 12: // Reserved word yobool
                 typeDeclaration(pilha, t_prod, "bool");
                 break;
             case 13: // Integer value
@@ -288,13 +289,39 @@ class SemanticAnalyzer {
         second_value = pilha.pop();
         String fv_type = first_value.getTipo();
         String sv_type = second_value.getTipo();
-        // TODO need bool treatment
-        if (fv_type.equals(sv_type) || (!fv_type.equals("char") && !sv_type.equals("char"))) {
-            if (fv_type.equals("char") && sv_type.equals("char")) {
-                t_prod.setTipo("char");
-            } else if (fv_type.equals("int") && sv_type.equals("int")) {
-                t_prod.setTipo("int");
-            } else if (fv_type.equals("") && !sv_type.equals("")) {
+
+        if (!fv_type.equals("bool") && !sv_type.equals("bool") && !expression.getTipo().equals("bool")) {
+            if (fv_type.equals(sv_type) || (!fv_type.equals("char") && !sv_type.equals("char"))) {
+                if (fv_type.equals("char") && sv_type.equals("char")) {
+                    t_prod.setTipo("char");
+                } else if (fv_type.equals("int") && sv_type.equals("int")) {
+                    t_prod.setTipo("int");
+                } else if (fv_type.equals("") && !sv_type.equals("")) {
+                    t_prod.setTipo(sv_type);
+                    if (!this.variable_declaration.contains(first_value.getCodigo())) {
+                        this.variable_declaration.add(first_value.getCodigo());
+                    }
+                    int index = this.variable_declaration.indexOf(first_value.getCodigo());
+                    this.variable_type.add(index, sv_type);
+                } else if (sv_type.equals("") && !fv_type.equals("")) {
+                    t_prod.setTipo(fv_type);
+                    if (!this.variable_declaration.contains(second_value.getCodigo())) {
+                        this.variable_declaration.add(second_value.getCodigo());
+                    }
+                    int index = this.variable_declaration.indexOf(second_value.getCodigo());
+                    this.variable_type.add(index, fv_type);
+                } else {
+                    t_prod.setTipo("float");
+                }
+                t_prod.setCodigo(first_value.getCodigo() + " " + expression.getCodigo() + " " + second_value.getCodigo());
+            } else {
+                t_prod.setCodigo("");
+                t_prod.setErro("Uma variável do tipo " + fv_type + " não pode operar com uma do tipo " + sv_type);
+            }
+        } else if (fv_type.equals("bool") && sv_type.equals("bool") && !expression.getTipo().equals("bool")) {
+            t_prod.setErro("Operador não é booleano");
+        } else if ((fv_type.equals("bool") && sv_type.equals("bool") || fv_type.equals("") || sv_type.equals("")) && expression.getTipo().equals("bool")) {
+            if (fv_type.equals("") && !sv_type.equals("")) {
                 t_prod.setTipo(sv_type);
                 if (!this.variable_declaration.contains(first_value.getCodigo())) {
                     this.variable_declaration.add(first_value.getCodigo());
@@ -309,12 +336,11 @@ class SemanticAnalyzer {
                 int index = this.variable_declaration.indexOf(second_value.getCodigo());
                 this.variable_type.add(index, fv_type);
             } else {
-                t_prod.setTipo("float");
+                t_prod.setTipo(expression.getTipo());
             }
             t_prod.setCodigo(first_value.getCodigo() + " " + expression.getCodigo() + " " + second_value.getCodigo());
-        } else {
-            t_prod.setCodigo("");
-            t_prod.setErro("Uma variável do tipo " + fv_type + " não pode operar com uma do tipo " + sv_type);
+        }  else if (!fv_type.equals("bool") && !sv_type.equals("bool") && expression.getTipo().equals("bool")) {
+            t_prod.setErro("Operador booleano suporta apenas operadores booleanos");
         }
     }
 
