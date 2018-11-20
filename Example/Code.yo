@@ -1,5 +1,7 @@
 yogod() {
 
+    yoint a
 
+    a = 1 + 1
 solado
 }

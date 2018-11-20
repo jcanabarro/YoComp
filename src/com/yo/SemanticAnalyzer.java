@@ -1,7 +1,5 @@
 package com.yo;
 
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
-
 import java.util.Stack;
 import java.util.List;
 import java.util.ArrayList;
@@ -32,6 +30,7 @@ class SemanticAnalyzer {
         Token t_prod = new Token("nao_terminal", prod);
 
         Token token;
+//        System.out.println(prod + " " + s);
         switch (Integer.valueOf(s)) {
             case 1:
                 if (this.variable_type.contains("later")) {
@@ -57,7 +56,13 @@ class SemanticAnalyzer {
                         t_prod.setErro("Uma variavel do tipo " + token_type.getTipo() + " não pode receber um tipo " + this.variable_type.get(index));
                     }
                 } else {
-                    t_prod.setErro("Variavel " + token.getValor() + " não foi declarada");
+                    if (this.variable_declaration.size() >= this.variable_type.size()) {
+                        this.variable_type.add("useless");
+                    } else {
+                        this.variable_declaration.add(token.getValor());
+                        int index = this.variable_declaration.indexOf(token.getValor());
+                        this.variable_type.set(index, "useless");
+                    }
                 }
                 break;
             case 3:
@@ -339,7 +344,7 @@ class SemanticAnalyzer {
                 t_prod.setTipo(expression.getTipo());
             }
             t_prod.setCodigo(first_value.getCodigo() + " " + expression.getCodigo() + " " + second_value.getCodigo());
-        }  else if (!fv_type.equals("bool") && !sv_type.equals("bool") && expression.getTipo().equals("bool")) {
+        } else if (!fv_type.equals("bool") && !sv_type.equals("bool") && expression.getTipo().equals("bool")) {
             t_prod.setErro("Operador booleano suporta apenas operadores booleanos");
         }
     }
