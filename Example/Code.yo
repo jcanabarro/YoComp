@@ -4,6 +4,6 @@ yogod() {
 
     a = 1 + 1
 
-    a = 'a' + 'b'
+    a = 1 + 2
 solado
 }

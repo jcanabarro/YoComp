@@ -9,12 +9,11 @@ public class Token {
     // ATRIBUTOS PARA ANALISE SEMANTICA
 
     private String local = "";
-    private String operador = ""; // para tratar do caso de operações relacionais
+    private String operador = "";
     private String codigo = "";
     private String verdadeiro = "";
     private String falso = "";
     private String tipo = "";
-    private int indice = 0;
     private String inicio = "";
     private String fim = "";
 
@@ -30,19 +29,7 @@ public class Token {
         this.l = 0;
     }
 
-
-    public void concatenarCodigo(String codigo){
-        this.codigo.concat(codigo);
-    }
-
-    public void concatenarCodigo(String codigo, String codigo2){
-        this.codigo.concat(" ");
-        this.codigo.concat(codigo);
-        this.codigo.concat(" ");
-        this.codigo.concat(codigo2);
-    }
-
-    public String getAtributo() {
+    String getAtributo() {
         return atributo;
     }
 
@@ -56,13 +43,13 @@ public class Token {
 
     @Override
     public String toString() {
-        if(this.erro.equals("")){
+        if (this.erro.equals("")) {
             return "[" + atributo + ", " + valor + "]";
         } else {
-            if(this.valor!=null){
-                return "[" + atributo + ", " + this.erro + ", Char: '" + this.valor +"', linha: "+ this.l + "]";
+            if (this.valor != null) {
+                return "[" + atributo + ", " + this.erro + ", Char: '" + this.valor + "', linha: " + this.l + "]";
             }
-            return "[" + atributo + ", " + this.erro + ", linha: "+ this.l + "]";
+            return "[" + atributo + ", " + this.erro + ", linha: " + this.l + "]";
         }
     }
 
@@ -106,47 +93,39 @@ public class Token {
         return verdadeiro;
     }
 
-    public void setVerdadeiro(String verdadeiro) {
+    void setVerdadeiro(String verdadeiro) {
         this.verdadeiro = verdadeiro;
     }
 
-    public String getFalso() {
+    String getFalso() {
         return falso;
     }
 
-    public void setFalso(String falso) {
+    void setFalso(String falso) {
         this.falso = falso;
     }
 
-    public String getTipo() {
+    String getTipo() {
         return tipo;
     }
 
-    public void setTipo(String tipo) {
+    void setTipo(String tipo) {
         this.tipo = tipo;
     }
 
-    public int getIndice() {
-        return indice;
-    }
-
-    public void setIndice(int indice) {
-        this.indice = indice;
-    }
-
-    public String getInicio() {
+    String getInicio() {
         return inicio;
     }
 
-    public void setInicio(String inicio) {
+    void setInicio(String inicio) {
         this.inicio = inicio;
     }
 
-    public String getFim() {
+    String getFim() {
         return fim;
     }
 
-    public void setFim(String fim) {
+    void setFim(String fim) {
         this.fim = fim;
     }
 
@@ -154,7 +133,7 @@ public class Token {
         return operador;
     }
 
-    public void setOperador(String operador) {
+    void setOperador(String operador) {
         this.operador = operador;
     }
 

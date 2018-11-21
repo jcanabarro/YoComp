@@ -7,9 +7,6 @@ import java.util.Arrays;
 import java.util.Collections;
 
 
-// TODO: Need apply 3 end code to expressions
-// TODO: Need apply type verification
-
 class SemanticAnalyzer {
 
     private String code;
@@ -30,7 +27,6 @@ class SemanticAnalyzer {
         Token t_prod = new Token("nao_terminal", prod);
 
         Token token;
-        System.out.println(prod + " " + s);
         switch (Integer.valueOf(s)) {
             case 1:
                 if (this.variable_type.contains("later")) {
@@ -87,11 +83,19 @@ class SemanticAnalyzer {
                 }
                 int index = this.variable_declaration.indexOf(token_attr.getValor());
                 if (this.variable_type.size() > index) {
-                    this.variable_type.set(index, token.getTipo());
+                    if (this.variable_type.get(index).matches("int|float") || token.getTipo().matches("int|float")) {
+                        if (this.variable_type.get(index).equals("int") && token.getTipo().equals("int")) {
+                            this.variable_type.set(index, "int");
+                        } else {
+                            this.variable_type.set(index, "float");
+                        }
+                    } else if (!this.variable_type.get(index).equals(token.getTipo())) {
+                        t_prod.setErro("A variável '" + token_attr.getValor() + "' está sendo atribuída a tipos diferentes");
+                    } else {
+                        this.variable_type.set(index, token.getTipo());
+                    }
                 } else {
                     this.variable_type.add(token.getTipo());
-                    System.out.println(this.variable_declaration);
-                    System.out.println(this.variable_type);
                 }
                 t_prod.setCodigo(code);
                 break;
@@ -339,7 +343,7 @@ class SemanticAnalyzer {
             }
             t_prod.setCodigo(first_value.getCodigo() + " " + expression.getCodigo() + " " + second_value.getCodigo());
         } else if (!fv_type.equals("bool") && !sv_type.equals("bool") && expression.getTipo().equals("bool")) {
-            t_prod.setErro("Operador booleano '" + expression.getCodigo() +"' suporta apenas operadores booleanos");
+            t_prod.setErro("Operador booleano '" + expression.getCodigo() + "' suporta apenas operadores booleanos");
         }
     }
 
