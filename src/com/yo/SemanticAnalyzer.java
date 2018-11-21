@@ -30,7 +30,7 @@ class SemanticAnalyzer {
         Token t_prod = new Token("nao_terminal", prod);
 
         Token token;
-//        System.out.println(prod + " " + s);
+        System.out.println(prod + " " + s);
         switch (Integer.valueOf(s)) {
             case 1:
                 if (this.variable_type.contains("later")) {
@@ -54,14 +54,6 @@ class SemanticAnalyzer {
                         t_prod.setCodigo(token_type.getCodigo() + " " + token.getValor());
                     } else {
                         t_prod.setErro("Uma variavel do tipo " + token_type.getTipo() + " não pode receber um tipo " + this.variable_type.get(index));
-                    }
-                } else {
-                    if (this.variable_declaration.size() >= this.variable_type.size()) {
-                        this.variable_type.add("useless");
-                    } else {
-                        this.variable_declaration.add(token.getValor());
-                        int index = this.variable_declaration.indexOf(token.getValor());
-                        this.variable_type.set(index, "useless");
                     }
                 }
                 break;
@@ -95,9 +87,11 @@ class SemanticAnalyzer {
                 }
                 int index = this.variable_declaration.indexOf(token_attr.getValor());
                 if (this.variable_type.size() > index) {
-                    this.variable_type.add(index, token.getTipo());
+                    this.variable_type.set(index, token.getTipo());
                 } else {
                     this.variable_type.add(token.getTipo());
+                    System.out.println(this.variable_declaration);
+                    System.out.println(this.variable_type);
                 }
                 t_prod.setCodigo(code);
                 break;
@@ -307,14 +301,14 @@ class SemanticAnalyzer {
                         this.variable_declaration.add(first_value.getCodigo());
                     }
                     int index = this.variable_declaration.indexOf(first_value.getCodigo());
-                    this.variable_type.add(index, sv_type);
+                    this.variable_type.set(index, sv_type);
                 } else if (sv_type.equals("") && !fv_type.equals("")) {
                     t_prod.setTipo(fv_type);
                     if (!this.variable_declaration.contains(second_value.getCodigo())) {
                         this.variable_declaration.add(second_value.getCodigo());
                     }
                     int index = this.variable_declaration.indexOf(second_value.getCodigo());
-                    this.variable_type.add(index, fv_type);
+                    this.variable_type.set(index, fv_type);
                 } else {
                     t_prod.setTipo("float");
                 }
@@ -324,7 +318,7 @@ class SemanticAnalyzer {
                 t_prod.setErro("Uma variável do tipo " + fv_type + " não pode operar com uma do tipo " + sv_type);
             }
         } else if (fv_type.equals("bool") && sv_type.equals("bool") && !expression.getTipo().equals("bool")) {
-            t_prod.setErro("Operador não é booleano");
+            t_prod.setErro("Operador '" + expression.getValor() + "' não é booleano");
         } else if ((fv_type.equals("bool") && sv_type.equals("bool") || fv_type.equals("") || sv_type.equals("")) && expression.getTipo().equals("bool")) {
             if (fv_type.equals("") && !sv_type.equals("")) {
                 t_prod.setTipo(sv_type);
@@ -332,20 +326,20 @@ class SemanticAnalyzer {
                     this.variable_declaration.add(first_value.getCodigo());
                 }
                 int index = this.variable_declaration.indexOf(first_value.getCodigo());
-                this.variable_type.add(index, sv_type);
+                this.variable_type.set(index, sv_type);
             } else if (sv_type.equals("") && !fv_type.equals("")) {
                 t_prod.setTipo(fv_type);
                 if (!this.variable_declaration.contains(second_value.getCodigo())) {
                     this.variable_declaration.add(second_value.getCodigo());
                 }
                 int index = this.variable_declaration.indexOf(second_value.getCodigo());
-                this.variable_type.add(index, fv_type);
+                this.variable_type.set(index, fv_type);
             } else {
                 t_prod.setTipo(expression.getTipo());
             }
             t_prod.setCodigo(first_value.getCodigo() + " " + expression.getCodigo() + " " + second_value.getCodigo());
         } else if (!fv_type.equals("bool") && !sv_type.equals("bool") && expression.getTipo().equals("bool")) {
-            t_prod.setErro("Operador booleano suporta apenas operadores booleanos");
+            t_prod.setErro("Operador booleano '" + expression.getCodigo() +"' suporta apenas operadores booleanos");
         }
     }
 
