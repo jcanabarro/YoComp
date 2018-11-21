@@ -257,8 +257,10 @@ class SemanticAnalyzer {
         Token token;
         token = pilha.pop();
         t_prod.setCode(token.getValue());
-        this.variable_declaration.add(token.getValue());
-        this.variable_type.add("later");
+        if (!this.variable_declaration.contains(token.getValue())) {
+            this.variable_declaration.add(token.getValue());
+            this.variable_type.add("later");
+        }
     }
 
     private void passValueAndType(Stack<Token> pilha, Token t_prod) {

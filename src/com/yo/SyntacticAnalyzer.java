@@ -57,12 +57,12 @@ class SyntacticAnalyzer {
             LOGGER.info("Token lido: " + a);
             String celula = cellValue(s, a, true);
             if (celula == null) {
-                return this.final_code;
+                return new ArrayList<>();
             }
             LOGGER.info("Valor na celula [" + s + ", " + a + "]: " + celula);
             String[] parser = parserCell(celula, s, a);
             if (parser == null) {
-                return this.final_code;
+                return new ArrayList<>();
             }
             switch (parser[0]) {
                 case "E":
@@ -103,7 +103,8 @@ class SyntacticAnalyzer {
                     // Semantic Error
                     if (!semanticToken.getError().equals("")) {
                         LOGGER.warning(semanticToken.getError());
-                        return this.final_code;
+                        System.out.println(semanticToken.getError());
+                        return new ArrayList<>();
                     }
                     int s1 = popInt();
                     pushInt(s1);
@@ -120,11 +121,11 @@ class SyntacticAnalyzer {
                     return this.final_code;
                 default:
                     LOGGER.info("analise terminada, string recusada");
-                    return this.final_code;
+                    return new ArrayList<>();
             }
         }
         LOGGER.info("analise terminada, string recusada");
-        return this.final_code;
+        return new ArrayList<>();
     }
 
     private String[] parserCell(String celula, int position, String name) {

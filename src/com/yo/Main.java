@@ -20,7 +20,7 @@ public class Main {
                 return;
             }
             try {
-                List<String> reservedWord = Arrays.asList(  "yoint", "yofloat", "yochar", "lag", "sehloiro", "yobool",
+                List<String> reservedWord = Arrays.asList("yoint", "yofloat", "yochar", "lag", "sehloiro", "yobool",
                         "eoq", "trab", "holy", "fon", "yogod", "circo", "soled",
                         "break", "true", "false", "printfi", "solado", "scanfi");
                 List<String> symbols = Arrays.asList("{", "}", ";", "?", "\"", "(", ")", "=", ":", "[", "]");
@@ -31,11 +31,14 @@ public class Main {
 //                System.out.println(tokens);
                 SyntacticAnalyzer syntactical = new SyntacticAnalyzer(csvTable, csvProduction);
                 List<String> code = syntactical.Analyzer(tokens);
-                Collections.reverse(code);
-                code.remove(code.size() - 1);
-
-                for (String aCode : code) {
-                    System.out.println(aCode);
+                if (!code.isEmpty()) {
+                    Collections.reverse(code);
+                    code.remove(code.size() - 1);
+                    for (String aCode : code) {
+                        System.out.println(aCode);
+                    }
+                } else {
+                    System.out.println(false);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

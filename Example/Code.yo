@@ -3,15 +3,10 @@ yogod() {
     yoint a
     yoint b
 
-    a = 1 + 1
-    b = b + 2
-
     eoq(a < 10) {
         a = 10 - a
-        scanfi(a)
+        b = 10 - a
     }
-
-    a = 10 * 5 + 200 / 100
 
 solado
 }
