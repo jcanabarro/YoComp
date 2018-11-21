@@ -14,23 +14,24 @@ class SemanticAnalyzer {
     private Integer temp_counter;
     private List<String> variable_declaration;
     private List<String> variable_type;
+    private List<String> final_code;
 
-    SemanticAnalyzer(List<String> variable_declaration, List<String> variable_type) {
+    SemanticAnalyzer(List<String> variable_declaration, List<String> variable_type, List<String> final_code) {
         this.code = "";
         this.label_counter = 0;
         this.temp_counter = 0;
         this.variable_declaration = variable_declaration;
         this.variable_type = variable_type;
+        this.final_code = final_code;
     }
 
-    Token codeGenerator(String s, String prod, Stack<Token> pilha) {
+    Token codeGenerator(String s, String prod, Stack<Token> pilha, List<String> final_code) {
         Token t_prod = new Token("nao_terminal", prod);
         Token token;
         switch (Integer.valueOf(s)) {
             case 1:
-                if (this.variable_type.contains("later")) {
-                    int index = this.variable_type.indexOf("later");
-                    t_prod.setError("Variavel " + this.variable_declaration.get(index) + " não foi declarada");
+                if (!this.variable_declaration.isEmpty()) {
+                    t_prod.setError("Variavel(s) não declaradas: " + this.variable_declaration);
                 } else {
                     System.out.println("Codigo intermediario gerado com sucesso");
                 }
@@ -43,6 +44,7 @@ class SemanticAnalyzer {
                     int index = this.variable_declaration.indexOf(token.getValue());
                     if (this.variable_type.get(index).equals("later")) {
                         this.variable_type.set(index, token_type.getType());
+                        t_prod.setCode(token_type.getCode() + " " + token.getValue());
                     } else if (this.variable_type.get(index).equals(token_type.getType())) {
                         t_prod.setCode(token_type.getCode() + " " + token.getValue());
                     } else if (token_type.getType().equals("float") && this.variable_type.get(index).equals("int")) {
@@ -50,7 +52,12 @@ class SemanticAnalyzer {
                     } else {
                         t_prod.setError("Uma variavel do tipo " + token_type.getType() + " não pode receber um tipo " + this.variable_type.get(index));
                     }
+                    this.variable_declaration.remove(index);
+                    this.variable_type.remove(index);
+                } else {
+                    t_prod.setError("Declaração duplicada da variável " + token.getValue());
                 }
+                this.final_code.add(t_prod.getCode());
                 break;
             case 3:
             case 4:
@@ -97,6 +104,7 @@ class SemanticAnalyzer {
                     this.variable_type.add(token.getType());
                 }
                 t_prod.setCode(code);
+                this.final_code.add(t_prod.getCode());
                 break;
             case 9: // Reserved word yoint
                 typeDeclaration(pilha, t_prod, "int");
@@ -127,7 +135,8 @@ class SemanticAnalyzer {
                 break;
             case 18:
             case 19:
-                t_prod.setCode(pilha.pop().getCode());
+                token = pilha.pop();
+                t_prod.setCode(token.getCode());
                 break;
             case 20: // SCANF
             case 21: // PRINTF
@@ -227,13 +236,13 @@ class SemanticAnalyzer {
                 t_prod.setCode(token.getValue() + " = " + this.getSpecialTempCounter());
                 break;
             case 71:
+                t_prod.setCode(pilha.pop().getCode());
                 break;
             case 72:
+                t_prod.setCode(pilha.pop().getCode());
                 break;
         }
-//        // TODO remove this after works are finished
-//        if(!t_prod.getCode().equals(""))
-//            System.out.println(t_prod.getCode());
+        final_code = this.final_code;
         return t_prod;
     }
 
@@ -317,7 +326,6 @@ class SemanticAnalyzer {
                 }
                 t_prod.setCode(first_value.getCode() + " " + expression.getCode() + " " + second_value.getCode());
             } else {
-                t_prod.setCode("");
                 t_prod.setError("Uma variável do tipo " + fv_type + " não pode operar com uma do tipo " + sv_type);
             }
         } else if (fv_type.equals("bool") && sv_type.equals("bool") && !expression.getType().equals("bool")) {
@@ -360,6 +368,7 @@ class SemanticAnalyzer {
         code += "if " + token_statement.getCode() + " = false goto " + t_prod.getEnd() + "\n";
         code += token_expr.getCode() + "\n" + "goto " + t_prod.getBegin() + "\n" + t_prod.getEnd() + " : ";
         t_prod.setCode(code);
+        this.final_code.add(t_prod.getCode());
     }
 
     private void formatOperation(Stack<Token> pilha, Token t_prod, String type) {
@@ -395,6 +404,7 @@ class SemanticAnalyzer {
         code += "if " + stop_condition + " = false goto " + t_prod.getEnd() + "\n";
         code += unary_value.getCode() + "\n" + "goto " + t_prod.getBegin() + "\n" + t_prod.getEnd() + " : ";
         t_prod.setCode(code);
+        this.final_code.add(t_prod.getCode());
     }
 
     private void value_declaration(Stack<Token> pilha, Token t_prod, String type) {
@@ -415,6 +425,7 @@ class SemanticAnalyzer {
             t_prod.setCode("print " + token.getCode());
         else
             t_prod.setCode("read " + token.getValue());
+        this.final_code.add(t_prod.getCode());
     }
 
     private void formatIf(Stack<Token> pilha, Token t_prod) {
@@ -427,11 +438,11 @@ class SemanticAnalyzer {
         token_expr = pilha.pop();
         t_prod.setTrue_label(this.getLabelCounter());
         t_prod.setFalse_label(this.getLabelCounter());
-        code = token_statement.getCode() + "\n";
         code += "if " + token_statement.getCode() + " = false goto " + t_prod.getFalse_label() + "\n";
         code += token_expr.getCode() + "\n";
         code += t_prod.getFalse_label() + " : \n";
         t_prod.setCode(code);
+        this.final_code.add(t_prod.getCode());
     }
 
 
@@ -452,7 +463,6 @@ class SemanticAnalyzer {
         t_prod.setTrue_label(this.getLabelCounter());
         t_prod.setFalse_label(this.getLabelCounter());
         String str_aux = this.getLabelCounter();
-        code = token_statement.getCode() + "\n";
         code += "if " + token_statement.getCode() + " = false goto " + t_prod.getFalse_label() + "\n";
         code += token_expr.getCode() + "\n";
         code += "goto " + str_aux + "\n";
@@ -460,6 +470,7 @@ class SemanticAnalyzer {
         code += token_else_expr.getCode() + "\n";
         code += str_aux + " : \n";
         t_prod.setCode(code);
+        this.final_code.add(t_prod.getCode());
     }
 
     private String getLabelCounter() {

@@ -19,6 +19,7 @@ class SyntacticAnalyzer {
     private List<String> reversed_values;
     private List<String> variable_declaration;
     private List<String> variable_type;
+    private List<String> final_code;
 
 
     public SyntacticAnalyzer(String csvTable, String csvProd) throws IOException {
@@ -31,12 +32,13 @@ class SyntacticAnalyzer {
         this.pilha = new Stack<>();
         this.variable_declaration = new ArrayList<>();
         this.variable_type = new ArrayList<>();
+        this.final_code = new ArrayList<>();
         this.reversed_values = Arrays.asList("string", "char", "int", "float", "id");
         LOGGER.finest("Pilha foi inicializada");
         pushInt(0);
     }
 
-    boolean Analyzer(List<Token> tokens) {
+    List<String> Analyzer(List<Token> tokens) {
         int i = 0;
         tokens.add(new Token("vazio", "$", 0));
         LOGGER.info("Inicializando Analise");
@@ -55,12 +57,12 @@ class SyntacticAnalyzer {
             LOGGER.info("Token lido: " + a);
             String celula = cellValue(s, a, true);
             if (celula == null) {
-                return false;
+                return this.final_code;
             }
             LOGGER.info("Valor na celula [" + s + ", " + a + "]: " + celula);
             String[] parser = parserCell(celula, s, a);
             if (parser == null) {
-                return false;
+                return this.final_code;
             }
             switch (parser[0]) {
                 case "E":
@@ -94,17 +96,15 @@ class SyntacticAnalyzer {
                     LOGGER.info("pilha auxiliar: "+ prodLog(pilha_aux.toString()));
 
                     // Here we apply the semantic analysis
-                    SemanticAnalyzer semantic = new SemanticAnalyzer(this.variable_declaration, this.variable_type);
+                    SemanticAnalyzer semantic = new SemanticAnalyzer(this.variable_declaration, this.variable_type, this.final_code);
                     Token semanticToken;
-                    semanticToken = semantic.codeGenerator(parser[1], prod, pilha_aux);
+                    semanticToken = semantic.codeGenerator(parser[1], prod, pilha_aux, this.final_code);
 
                     // Semantic Error
                     if (!semanticToken.getError().equals("")) {
                         LOGGER.warning(semanticToken.getError());
-                        System.out.println(semanticToken.getError());
-                        return false;
+                        return this.final_code;
                     }
-
                     int s1 = popInt();
                     pushInt(s1);
                     LOGGER.info("Topo da pilha: " + s1);
@@ -117,14 +117,14 @@ class SyntacticAnalyzer {
                     break;
                 case "a":
                     LOGGER.info("analise terminada, string aceita");
-                    return true;
+                    return this.final_code;
                 default:
                     LOGGER.info("analise terminada, string recusada");
-                    return false;
+                    return this.final_code;
             }
         }
         LOGGER.info("analise terminada, string recusada");
-        return false;
+        return this.final_code;
     }
 
     private String[] parserCell(String celula, int position, String name) {

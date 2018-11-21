@@ -2,6 +2,7 @@ package com.yo;
 
 import java.io.*;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Main {
@@ -29,7 +30,13 @@ public class Main {
                 List<Token> tokens = lexical.analyser();
 //                System.out.println(tokens);
                 SyntacticAnalyzer syntactical = new SyntacticAnalyzer(csvTable, csvProduction);
-                System.out.println(syntactical.Analyzer(tokens));
+                List<String> code = syntactical.Analyzer(tokens);
+                Collections.reverse(code);
+                code.remove(code.size() - 1);
+
+                for (String aCode : code) {
+                    System.out.println(aCode);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
