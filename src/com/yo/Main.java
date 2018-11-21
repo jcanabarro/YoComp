@@ -28,12 +28,11 @@ public class Main {
 
                 LexicalAnalyzer lexical = new LexicalAnalyzer(file, reservedWord, symbols, specialOperators);
                 List<Token> tokens = lexical.analyser();
-//                System.out.println(tokens);
+//                System.out.println(tokens.size());
                 SyntacticAnalyzer syntactical = new SyntacticAnalyzer(csvTable, csvProduction);
                 List<String> code = syntactical.Analyzer(tokens);
                 if (!code.isEmpty()) {
                     Collections.reverse(code);
-                    code.remove(code.size() - 1);
                     for (String aCode : code) {
                         System.out.println(aCode);
                     }
