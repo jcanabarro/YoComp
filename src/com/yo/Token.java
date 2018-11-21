@@ -1,76 +1,74 @@
 package com.yo;
 
 public class Token {
-    private String atributo;
-    private String valor;
-    private String erro = "";
-    private int l;
-
-    // ATRIBUTOS PARA ANALISE SEMANTICA
+    private String attribute;
+    private String value;
+    private String error = "";
+    private int row;
 
     private String local = "";
-    private String operador = "";
-    private String codigo = "";
-    private String verdadeiro = "";
-    private String falso = "";
-    private String tipo = "";
-    private String inicio = "";
-    private String fim = "";
+    private String operator = "";
+    private String code = "";
+    private String true_label = "";
+    private String false_label = "";
+    private String type = "";
+    private String begin = "";
+    private String end = "";
 
-    public Token(String atributo, String valor, int l) {
-        this.atributo = atributo;
-        this.valor = valor;
-        this.l = l;
+    public Token(String attribute, String valor, int row) {
+        this.attribute = attribute;
+        this.value = valor;
+        this.row = row;
     }
 
-    public Token(String atributo, String valor) {
-        this.atributo = atributo;
-        this.valor = valor;
-        this.l = 0;
+    public Token(String attribute, String value) {
+        this.attribute = attribute;
+        this.value = value;
+        this.row = 0;
     }
 
-    String getAtributo() {
-        return atributo;
+    String getAttribute() {
+        return attribute;
     }
 
-    void setAtributo(String atributo) {
-        this.atributo = atributo;
+    void setAttribute(String attribute) {
+        this.attribute = attribute;
     }
 
-    String getValor() {
-        return valor;
+    String getValue() {
+        return value;
     }
 
     @Override
     public String toString() {
-        if (this.erro.equals("")) {
-            return "[" + atributo + ", " + valor + "]";
+        if (this.error.equals("")) {
+            return "[" + attribute + ", " + value + "]";
         } else {
-            if (this.valor != null) {
-                return "[" + atributo + ", " + this.erro + ", Char: '" + this.valor + "', linha: " + this.l + "]";
+            if (this.value != null) {
+                return "[" + attribute + ", " + this.error + ", Char: '" + this.value + "', linha: " + this.row + "]";
             }
-            return "[" + atributo + ", " + this.erro + ", linha: " + this.l + "]";
+            return "[" + attribute + ", " + this.error + ", linha: " + this.row + "]";
         }
     }
 
-    void setValor(String valor) {
-        this.valor = valor;
+    void setValue(String value) {
+        this.value = value;
     }
 
-    String getErro() {
-        return erro;
+    String getError() {
+        return error;
     }
 
-    void setErro(String erro) {
-        this.erro = erro;
+    void setError(String error) {
+        this.error = error;
     }
 
-    public int getL() {
-        return l;
+    public int getRow() {
+        return row;
     }
 
-    void setL(int l) {
-        this.l = l;
+    void setRow(int row) {
+        this.row = row;
     }
 
     public String getLocal() {
@@ -81,61 +79,60 @@ public class Token {
         this.local = local;
     }
 
-    String getCodigo() {
-        return codigo;
+    String getCode() {
+        return code;
     }
 
-    void setCodigo(String codigo) {
-        this.codigo = codigo;
+    void setCode(String code) {
+        this.code = code;
     }
 
-    public String getVerdadeiro() {
-        return verdadeiro;
+    public String getTrue_label() {
+        return true_label;
     }
 
-    void setVerdadeiro(String verdadeiro) {
-        this.verdadeiro = verdadeiro;
+    void setTrue_label(String true_label) {
+        this.true_label = true_label;
     }
 
-    String getFalso() {
-        return falso;
+    String getFalse_label() {
+        return false_label;
     }
 
-    void setFalso(String falso) {
-        this.falso = falso;
+    void setFalse_label(String false_label) {
+        this.false_label = false_label;
     }
 
-    String getTipo() {
-        return tipo;
+    String getType() {
+        return type;
     }
 
-    void setTipo(String tipo) {
-        this.tipo = tipo;
+    void setType(String type) {
+        this.type = type;
     }
 
-    String getInicio() {
-        return inicio;
+    String getBegin() {
+        return begin;
     }
 
-    void setInicio(String inicio) {
-        this.inicio = inicio;
+    void setBegin(String begin) {
+        this.begin = begin;
     }
 
-    String getFim() {
-        return fim;
+    String getEnd() {
+        return end;
     }
 
-    void setFim(String fim) {
-        this.fim = fim;
+    void setEnd(String end) {
+        this.end = end;
     }
 
-    public String getOperador() {
-        return operador;
+    public String getOperator() {
+        return operator;
     }
 
-    void setOperador(String operador) {
-        this.operador = operador;
+    void setOperator(String operator) {
+        this.operator = operator;
     }
-
 
 }

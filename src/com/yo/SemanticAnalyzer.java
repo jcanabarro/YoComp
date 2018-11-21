@@ -25,13 +25,12 @@ class SemanticAnalyzer {
 
     Token codeGenerator(String s, String prod, Stack<Token> pilha) {
         Token t_prod = new Token("nao_terminal", prod);
-
         Token token;
         switch (Integer.valueOf(s)) {
             case 1:
                 if (this.variable_type.contains("later")) {
                     int index = this.variable_type.indexOf("later");
-                    t_prod.setErro("Variavel " + this.variable_declaration.get(index) + " não foi declarada");
+                    t_prod.setError("Variavel " + this.variable_declaration.get(index) + " não foi declarada");
                 } else {
                     System.out.println("Codigo intermediario gerado com sucesso");
                 }
@@ -40,16 +39,16 @@ class SemanticAnalyzer {
                 Token token_type;
                 token_type = pilha.pop();
                 token = pilha.pop();
-                if (this.variable_declaration.contains(token.getValor())) {
-                    int index = this.variable_declaration.indexOf(token.getValor());
+                if (this.variable_declaration.contains(token.getValue())) {
+                    int index = this.variable_declaration.indexOf(token.getValue());
                     if (this.variable_type.get(index).equals("later")) {
-                        this.variable_type.set(index, token_type.getTipo());
-                    } else if (this.variable_type.get(index).equals(token_type.getTipo())) {
-                        t_prod.setCodigo(token_type.getCodigo() + " " + token.getValor());
-                    } else if (token_type.getTipo().equals("float") && this.variable_type.get(index).equals("int")) {
-                        t_prod.setCodigo(token_type.getCodigo() + " " + token.getValor());
+                        this.variable_type.set(index, token_type.getType());
+                    } else if (this.variable_type.get(index).equals(token_type.getType())) {
+                        t_prod.setCode(token_type.getCode() + " " + token.getValue());
+                    } else if (token_type.getType().equals("float") && this.variable_type.get(index).equals("int")) {
+                        t_prod.setCode(token_type.getCode() + " " + token.getValue());
                     } else {
-                        t_prod.setErro("Uma variavel do tipo " + token_type.getTipo() + " não pode receber um tipo " + this.variable_type.get(index));
+                        t_prod.setError("Uma variavel do tipo " + token_type.getType() + " não pode receber um tipo " + this.variable_type.get(index));
                     }
                 }
                 break;
@@ -58,8 +57,8 @@ class SemanticAnalyzer {
             case 5:
             case 6:
                 token = pilha.pop();
-                t_prod.setCodigo(token.getCodigo());
-                t_prod.setTipo(token.getTipo());
+                t_prod.setCode(token.getCode());
+                t_prod.setType(token.getType());
                 break;
             case 7: // attributions
             case 8: // attributions
@@ -67,37 +66,37 @@ class SemanticAnalyzer {
                 token_attr = pilha.pop();
                 pilha.pop();
                 token = pilha.pop();
-                code = token_attr.getValor() + " = " + token.getCodigo();
+                code = token_attr.getValue() + " = " + token.getCode();
                 List<String> assembly_expression = Arrays.asList(code.split(" "));
                 if (assembly_expression.size() > 3) {
                     ArrayList<String> expression = new ArrayList<>(assembly_expression);
                     expression.remove(0);
                     expression.remove(0);
                     String tac = "";
-                    List<String> formattedTac = format3End(expression, tac, token_attr.getValor());
+                    List<String> formattedTac = format3End(expression, tac, token_attr.getValue());
                     code = String.join("\n ", formattedTac);
                 }
-                t_prod.setTipo(token.getTipo());
-                if (!this.variable_declaration.contains(token_attr.getValor())) {
-                    this.variable_declaration.add(token_attr.getValor());
+                t_prod.setType(token.getType());
+                if (!this.variable_declaration.contains(token_attr.getValue())) {
+                    this.variable_declaration.add(token_attr.getValue());
                 }
-                int index = this.variable_declaration.indexOf(token_attr.getValor());
+                int index = this.variable_declaration.indexOf(token_attr.getValue());
                 if (this.variable_type.size() > index) {
-                    if (this.variable_type.get(index).matches("int|float") || token.getTipo().matches("int|float")) {
-                        if (this.variable_type.get(index).equals("int") && token.getTipo().equals("int")) {
+                    if (this.variable_type.get(index).matches("int|float") || token.getType().matches("int|float")) {
+                        if (this.variable_type.get(index).equals("int") && token.getType().equals("int")) {
                             this.variable_type.set(index, "int");
                         } else {
                             this.variable_type.set(index, "float");
                         }
-                    } else if (!this.variable_type.get(index).equals(token.getTipo())) {
-                        t_prod.setErro("A variável '" + token_attr.getValor() + "' está sendo atribuída a tipos diferentes");
+                    } else if (!this.variable_type.get(index).equals(token.getType())) {
+                        t_prod.setError("A variável '" + token_attr.getValue() + "' está sendo atribuída a tipos diferentes");
                     } else {
-                        this.variable_type.set(index, token.getTipo());
+                        this.variable_type.set(index, token.getType());
                     }
                 } else {
-                    this.variable_type.add(token.getTipo());
+                    this.variable_type.add(token.getType());
                 }
-                t_prod.setCodigo(code);
+                t_prod.setCode(code);
                 break;
             case 9: // Reserved word yoint
                 typeDeclaration(pilha, t_prod, "int");
@@ -128,7 +127,7 @@ class SemanticAnalyzer {
                 break;
             case 18:
             case 19:
-                t_prod.setCodigo(pilha.pop().getCodigo());
+                t_prod.setCode(pilha.pop().getCode());
                 break;
             case 20: // SCANF
             case 21: // PRINTF
@@ -140,7 +139,7 @@ class SemanticAnalyzer {
             case 25: // OUTPUTVALUE == string
             case 26: // OUTPUTVALUE == TIPO
                 token = pilha.pop();
-                t_prod.setCodigo(token.getValor());
+                t_prod.setCode(token.getValue());
                 break;
             case 27: // IF
             case 28: // IF
@@ -178,8 +177,8 @@ class SemanticAnalyzer {
             case 47:
                 pilha.pop();
                 token = pilha.pop();
-                t_prod.setCodigo("(" + token.getCodigo() + ")");
-                t_prod.setTipo(token.getTipo());
+                t_prod.setCode("(" + token.getCode() + ")");
+                t_prod.setType(token.getType());
                 break;
             case 48:
             case 49:
@@ -191,7 +190,7 @@ class SemanticAnalyzer {
                 Token negative;
                 negative = pilha.pop();
                 token = pilha.pop();
-                t_prod.setCodigo(negative.getValor() + token.getCodigo());
+                t_prod.setCode(negative.getValue() + token.getCode());
                 break;
             case 53:
             case 54:
@@ -224,8 +223,8 @@ class SemanticAnalyzer {
             case 69:
             case 70:
                 token = pilha.pop();
-                code += this.getTempCounter() + " = " + token.getValor() + " + 1\n";
-                t_prod.setCodigo(token.getValor() + " = " + this.getSpecialTempCounter());
+                code += this.getTempCounter() + " = " + token.getValue() + " + 1\n";
+                t_prod.setCode(token.getValue() + " = " + this.getSpecialTempCounter());
                 break;
             case 71:
                 break;
@@ -233,38 +232,38 @@ class SemanticAnalyzer {
                 break;
         }
 //        // TODO remove this after works are finished
-//        if(!t_prod.getCodigo().equals(""))
-//            System.out.println(t_prod.getCodigo());
+//        if(!t_prod.getCode().equals(""))
+//            System.out.println(t_prod.getCode());
         return t_prod;
     }
 
     private void typeDeclaration(Stack<Token> pilha, Token t_prod, String type) {
         Token token;
         token = pilha.pop();
-        t_prod.setCodigo(token.getValor());
-        t_prod.setTipo(type);
+        t_prod.setCode(token.getValue());
+        t_prod.setType(type);
     }
 
     private void passValueAndTypeID(Stack<Token> pilha, Token t_prod) {
         Token token;
         token = pilha.pop();
-        t_prod.setCodigo(token.getValor());
-        this.variable_declaration.add(token.getValor());
+        t_prod.setCode(token.getValue());
+        this.variable_declaration.add(token.getValue());
         this.variable_type.add("later");
     }
 
     private void passValueAndType(Stack<Token> pilha, Token t_prod) {
         Token token;
         token = pilha.pop();
-        t_prod.setCodigo(token.getCodigo());
-        if (token.getTipo().isEmpty()) {
-            String[] split_declaration = token.getCodigo().split(" ");
+        t_prod.setCode(token.getCode());
+        if (token.getType().isEmpty()) {
+            String[] split_declaration = token.getCode().split(" ");
             if (!this.variable_declaration.contains(split_declaration[0]) && split_declaration.length <= 1) {
-                this.variable_declaration.add(token.getValor());
+                this.variable_declaration.add(token.getValue());
                 this.variable_type.add("later");
             }
         }
-        t_prod.setTipo(token.getTipo());
+        t_prod.setType(token.getType());
     }
 
     private List<String> format3End(List<String> assembly_expression, String expr, String attribution) {
@@ -290,60 +289,60 @@ class SemanticAnalyzer {
         first_value = pilha.pop();
         expression = pilha.pop();
         second_value = pilha.pop();
-        String fv_type = first_value.getTipo();
-        String sv_type = second_value.getTipo();
+        String fv_type = first_value.getType();
+        String sv_type = second_value.getType();
 
-        if (!fv_type.equals("bool") && !sv_type.equals("bool") && !expression.getTipo().equals("bool")) {
+        if (!fv_type.equals("bool") && !sv_type.equals("bool") && !expression.getType().equals("bool")) {
             if (fv_type.equals(sv_type) || (!fv_type.equals("char") && !sv_type.equals("char"))) {
                 if (fv_type.equals("char") && sv_type.equals("char")) {
-                    t_prod.setTipo("char");
+                    t_prod.setType("char");
                 } else if (fv_type.equals("int") && sv_type.equals("int")) {
-                    t_prod.setTipo("int");
+                    t_prod.setType("int");
                 } else if (fv_type.equals("") && !sv_type.equals("")) {
-                    t_prod.setTipo(sv_type);
-                    if (!this.variable_declaration.contains(first_value.getCodigo())) {
-                        this.variable_declaration.add(first_value.getCodigo());
+                    t_prod.setType(sv_type);
+                    if (!this.variable_declaration.contains(first_value.getCode())) {
+                        this.variable_declaration.add(first_value.getCode());
                     }
-                    int index = this.variable_declaration.indexOf(first_value.getCodigo());
+                    int index = this.variable_declaration.indexOf(first_value.getCode());
                     this.variable_type.set(index, sv_type);
                 } else if (sv_type.equals("") && !fv_type.equals("")) {
-                    t_prod.setTipo(fv_type);
-                    if (!this.variable_declaration.contains(second_value.getCodigo())) {
-                        this.variable_declaration.add(second_value.getCodigo());
+                    t_prod.setType(fv_type);
+                    if (!this.variable_declaration.contains(second_value.getCode())) {
+                        this.variable_declaration.add(second_value.getCode());
                     }
-                    int index = this.variable_declaration.indexOf(second_value.getCodigo());
+                    int index = this.variable_declaration.indexOf(second_value.getCode());
                     this.variable_type.set(index, fv_type);
                 } else {
-                    t_prod.setTipo("float");
+                    t_prod.setType("float");
                 }
-                t_prod.setCodigo(first_value.getCodigo() + " " + expression.getCodigo() + " " + second_value.getCodigo());
+                t_prod.setCode(first_value.getCode() + " " + expression.getCode() + " " + second_value.getCode());
             } else {
-                t_prod.setCodigo("");
-                t_prod.setErro("Uma variável do tipo " + fv_type + " não pode operar com uma do tipo " + sv_type);
+                t_prod.setCode("");
+                t_prod.setError("Uma variável do tipo " + fv_type + " não pode operar com uma do tipo " + sv_type);
             }
-        } else if (fv_type.equals("bool") && sv_type.equals("bool") && !expression.getTipo().equals("bool")) {
-            t_prod.setErro("Operador '" + expression.getValor() + "' não é booleano");
-        } else if ((fv_type.equals("bool") && sv_type.equals("bool") || fv_type.equals("") || sv_type.equals("")) && expression.getTipo().equals("bool")) {
+        } else if (fv_type.equals("bool") && sv_type.equals("bool") && !expression.getType().equals("bool")) {
+            t_prod.setError("Operador '" + expression.getValue() + "' não é booleano");
+        } else if ((fv_type.equals("bool") && sv_type.equals("bool") || fv_type.equals("") || sv_type.equals("")) && expression.getType().equals("bool")) {
             if (fv_type.equals("") && !sv_type.equals("")) {
-                t_prod.setTipo(sv_type);
-                if (!this.variable_declaration.contains(first_value.getCodigo())) {
-                    this.variable_declaration.add(first_value.getCodigo());
+                t_prod.setType(sv_type);
+                if (!this.variable_declaration.contains(first_value.getCode())) {
+                    this.variable_declaration.add(first_value.getCode());
                 }
-                int index = this.variable_declaration.indexOf(first_value.getCodigo());
+                int index = this.variable_declaration.indexOf(first_value.getCode());
                 this.variable_type.set(index, sv_type);
             } else if (sv_type.equals("") && !fv_type.equals("")) {
-                t_prod.setTipo(fv_type);
-                if (!this.variable_declaration.contains(second_value.getCodigo())) {
-                    this.variable_declaration.add(second_value.getCodigo());
+                t_prod.setType(fv_type);
+                if (!this.variable_declaration.contains(second_value.getCode())) {
+                    this.variable_declaration.add(second_value.getCode());
                 }
-                int index = this.variable_declaration.indexOf(second_value.getCodigo());
+                int index = this.variable_declaration.indexOf(second_value.getCode());
                 this.variable_type.set(index, fv_type);
             } else {
-                t_prod.setTipo(expression.getTipo());
+                t_prod.setType(expression.getType());
             }
-            t_prod.setCodigo(first_value.getCodigo() + " " + expression.getCodigo() + " " + second_value.getCodigo());
-        } else if (!fv_type.equals("bool") && !sv_type.equals("bool") && expression.getTipo().equals("bool")) {
-            t_prod.setErro("Operador booleano '" + expression.getCodigo() + "' suporta apenas operadores booleanos");
+            t_prod.setCode(first_value.getCode() + " " + expression.getCode() + " " + second_value.getCode());
+        } else if (!fv_type.equals("bool") && !sv_type.equals("bool") && expression.getType().equals("bool")) {
+            t_prod.setError("Operador booleano '" + expression.getCode() + "' suporta apenas operadores booleanos");
         }
     }
 
@@ -355,20 +354,20 @@ class SemanticAnalyzer {
         pilha.pop();
         pilha.pop();
         token_expr = pilha.pop();
-        t_prod.setInicio(this.getLabelCounter());
-        t_prod.setFim(this.getLabelCounter());
-        code = t_prod.getInicio() + " : \n";
-        code += "if " + token_statement.getCodigo() + " = false goto " + t_prod.getFim() + "\n";
-        code += token_expr.getCodigo() + "\n" + "goto " + t_prod.getInicio() + "\n" + t_prod.getFim() + " : ";
-        t_prod.setCodigo(code);
+        t_prod.setBegin(this.getLabelCounter());
+        t_prod.setEnd(this.getLabelCounter());
+        code = t_prod.getBegin() + " : \n";
+        code += "if " + token_statement.getCode() + " = false goto " + t_prod.getEnd() + "\n";
+        code += token_expr.getCode() + "\n" + "goto " + t_prod.getBegin() + "\n" + t_prod.getEnd() + " : ";
+        t_prod.setCode(code);
     }
 
     private void formatOperation(Stack<Token> pilha, Token t_prod, String type) {
         Token t_op;
         t_op = pilha.pop();
-        t_prod.setCodigo(t_op.getValor());
-        t_prod.setTipo(type);
-        t_prod.setOperador(t_op.getValor());
+        t_prod.setCode(t_op.getValue());
+        t_prod.setType(type);
+        t_prod.setOperator(t_op.getValue());
     }
 
     private void formatFor(Stack<Token> pilha, Token t_prod) {
@@ -387,22 +386,22 @@ class SemanticAnalyzer {
         pilha.pop();
         pilha.pop();
         expr = pilha.pop();
-        String stop_condition = iter_var.getValor() + " " + op_relational.getCodigo() + " " + stop_value.getCodigo();
-        t_prod.setInicio(this.getLabelCounter());
-        t_prod.setFim(this.getLabelCounter());
+        String stop_condition = iter_var.getValue() + " " + op_relational.getCode() + " " + stop_value.getCode();
+        t_prod.setBegin(this.getLabelCounter());
+        t_prod.setEnd(this.getLabelCounter());
         code = "";
-        code += t_prod.getInicio() + " : \n";
-        code += expr.getCodigo() + "\n";
-        code += "if " + stop_condition + " = false goto " + t_prod.getFim() + "\n";
-        code += unary_value.getCodigo() + "\n" + "goto " + t_prod.getInicio() + "\n" + t_prod.getFim() + " : ";
-        t_prod.setCodigo(code);
+        code += t_prod.getBegin() + " : \n";
+        code += expr.getCode() + "\n";
+        code += "if " + stop_condition + " = false goto " + t_prod.getEnd() + "\n";
+        code += unary_value.getCode() + "\n" + "goto " + t_prod.getBegin() + "\n" + t_prod.getEnd() + " : ";
+        t_prod.setCode(code);
     }
 
     private void value_declaration(Stack<Token> pilha, Token t_prod, String type) {
         Token token;
         token = pilha.pop();
-        t_prod.setTipo(type);
-        t_prod.setCodigo(token.getValor());
+        t_prod.setType(type);
+        t_prod.setCode(token.getValue());
     }
 
     private void inOutFormat(Stack<Token> pilha, Token t_prod) {
@@ -412,10 +411,10 @@ class SemanticAnalyzer {
         pilha.pop();
         token = pilha.pop();
         pilha.pop();
-        if (token_in_out.getValor().equals("printfi"))
-            t_prod.setCodigo("print " + token.getCodigo());
+        if (token_in_out.getValue().equals("printfi"))
+            t_prod.setCode("print " + token.getCode());
         else
-            t_prod.setCodigo("read " + token.getValor());
+            t_prod.setCode("read " + token.getValue());
     }
 
     private void formatIf(Stack<Token> pilha, Token t_prod) {
@@ -426,13 +425,13 @@ class SemanticAnalyzer {
         pilha.pop();
         pilha.pop();
         token_expr = pilha.pop();
-        t_prod.setVerdadeiro(this.getLabelCounter());
-        t_prod.setFalso(this.getLabelCounter());
-        code = token_statement.getCodigo() + "\n";
-        code += "if " + token_statement.getCodigo() + " = false goto " + t_prod.getFalso() + "\n";
-        code += token_expr.getCodigo() + "\n";
-        code += t_prod.getFalso() + " : \n";
-        t_prod.setCodigo(code);
+        t_prod.setTrue_label(this.getLabelCounter());
+        t_prod.setFalse_label(this.getLabelCounter());
+        code = token_statement.getCode() + "\n";
+        code += "if " + token_statement.getCode() + " = false goto " + t_prod.getFalse_label() + "\n";
+        code += token_expr.getCode() + "\n";
+        code += t_prod.getFalse_label() + " : \n";
+        t_prod.setCode(code);
     }
 
 
@@ -450,17 +449,17 @@ class SemanticAnalyzer {
         pilha.pop();
         pilha.pop();
         token_else_expr = pilha.pop();
-        t_prod.setVerdadeiro(this.getLabelCounter());
-        t_prod.setFalso(this.getLabelCounter());
+        t_prod.setTrue_label(this.getLabelCounter());
+        t_prod.setFalse_label(this.getLabelCounter());
         String str_aux = this.getLabelCounter();
-        code = token_statement.getCodigo() + "\n";
-        code += "if " + token_statement.getCodigo() + " = false goto " + t_prod.getFalso() + "\n";
-        code += token_expr.getCodigo() + "\n";
+        code = token_statement.getCode() + "\n";
+        code += "if " + token_statement.getCode() + " = false goto " + t_prod.getFalse_label() + "\n";
+        code += token_expr.getCode() + "\n";
         code += "goto " + str_aux + "\n";
-        code += t_prod.getFalso() + " : \n";
-        code += token_else_expr.getCodigo() + "\n";
+        code += t_prod.getFalse_label() + " : \n";
+        code += token_else_expr.getCode() + "\n";
         code += str_aux + " : \n";
-        t_prod.setCodigo(code);
+        t_prod.setCode(code);
     }
 
     private String getLabelCounter() {

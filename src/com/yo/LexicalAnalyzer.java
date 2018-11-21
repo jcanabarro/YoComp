@@ -71,7 +71,7 @@ class LexicalAnalyzer {
         Token token = recognizeToken();
         while (token != null) {
             tokens.add(token);
-            if(!token.getErro().equals("")) break;
+            if(!token.getError().equals("")) break;
             token = recognizeToken();
         }
         return tokens;
@@ -127,21 +127,21 @@ class LexicalAnalyzer {
         Token number = new Token("int", null, this.row);
         String value = FindPattern("[0-9]");
         resetBuffer();
-        number.setValor(value);
+        number.setValue(value);
         if (readChar() == '.') {
             value += '.';
             String validation = FindPattern("[0-9]");
             value += validation;
-            number.setValor(value);
-            number.setAtributo("float");
+            number.setValue(value);
+            number.setAttribute("float");
             resetBuffer();
             if(validation.equals("")){
-                number.setErro("Wrong float definition");
+                number.setError("Wrong float definition");
             }
         } else {
             resetBuffer();
         }
-        number.setL(this.row);
+        number.setRow(this.row);
         return number;
     }
 
@@ -150,11 +150,11 @@ class LexicalAnalyzer {
         String value = FindPattern("[a-zA-Z0-9]");
         resetBuffer();
         if (this.reservedWords.contains(value)) {
-            reservedWord.setValor(value);
-            reservedWord.setAtributo("reserved");
+            reservedWord.setValue(value);
+            reservedWord.setAttribute("reserved");
         } else {
-            reservedWord.setValor(value);
-            reservedWord.setAtributo("id");
+            reservedWord.setValue(value);
+            reservedWord.setAttribute("id");
         }
         resetBuffer();
         return reservedWord;
@@ -169,8 +169,8 @@ class LexicalAnalyzer {
         } else {
             resetBuffer();
         }
-        operator.setValor(String.valueOf(current));
-        operator.setL(this.row);
+        operator.setValue(String.valueOf(current));
+        operator.setRow(this.row);
         return operator;
     }
 
@@ -178,9 +178,9 @@ class LexicalAnalyzer {
         Token symbol = new Token("symbol", "", this.row);
         String nextSymbol = String.valueOf(readChar());
         if (this.symbols.contains(nextSymbol)) {
-            symbol.setValor(nextSymbol);
+            symbol.setValue(nextSymbol);
         }
-        symbol.setL(this.row);
+        symbol.setRow(this.row);
         return symbol;
     }
 
@@ -189,23 +189,23 @@ class LexicalAnalyzer {
         char nextSymbol = readChar();
         if(nextSymbol == '\''){
             String character = readString(nextSymbol);
-            symbol.setValor('\'' + character + '\'');
-            symbol.setAtributo("char");
+            symbol.setValue('\'' + character + '\'');
+            symbol.setAttribute("char");
         } else {
             String string = readString(nextSymbol);
-            symbol.setValor('\'' + string + '\'');
-            symbol.setAtributo("string");
+            symbol.setValue('\'' + string + '\'');
+            symbol.setAttribute("string");
         }
-        symbol.setL(this.row);
+        symbol.setRow(this.row);
         return symbol;
     }
 
     private Token ErrorStatement(String word) throws IOException {
         Token error = new Token("", "", this.row);
         resetBuffer();
-        error.setErro("Character not defined");
-        error.setValor(word);
-        error.setL(this.row);
+        error.setError("Character not defined");
+        error.setValue(word);
+        error.setRow(this.row);
         return  error;
     }
 }

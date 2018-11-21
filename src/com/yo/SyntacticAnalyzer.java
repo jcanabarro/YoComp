@@ -47,9 +47,9 @@ class SyntacticAnalyzer {
             pushInt(s);
             String a;
             LOGGER.info("Topo da pilha: " + s);
-            a = tokens.get(i).getValor();
-            if(this.reversed_values.contains(tokens.get(i).getAtributo())){
-                a = tokens.get(i).getAtributo();
+            a = tokens.get(i).getValue();
+            if(this.reversed_values.contains(tokens.get(i).getAttribute())){
+                a = tokens.get(i).getAttribute();
             }
 
             LOGGER.info("Token lido: " + a);
@@ -83,7 +83,7 @@ class SyntacticAnalyzer {
                     Token p;
                     for (int j = 0; j < tamanho; j++) {
                         p = pilha.pop();
-                        if(!p.getAtributo().equals("")) {
+                        if(!p.getAttribute().equals("")) {
                             LOGGER.finest("desempilhando: " + p);
                             pilha_aux.push(p);
                         }
@@ -99,9 +99,9 @@ class SyntacticAnalyzer {
                     semanticToken = semantic.codeGenerator(parser[1], prod, pilha_aux);
 
                     // Semantic Error
-                    if (!semanticToken.getErro().equals("")) {
-                        LOGGER.warning(semanticToken.getErro());
-                        System.out.println(semanticToken.getErro());
+                    if (!semanticToken.getError().equals("")) {
+                        LOGGER.warning(semanticToken.getError());
+                        System.out.println(semanticToken.getError());
                         return false;
                     }
 
@@ -171,7 +171,7 @@ class SyntacticAnalyzer {
     private int popInt() {
         LOGGER.finest("desempilhando valor inteiro");
         Token aux = pilha.pop();
-        int value = Integer.valueOf(aux.getValor());
+        int value = Integer.valueOf(aux.getValue());
         LOGGER.finest("valor inteiro desempilhado: "+ value);
         return value;
     }
