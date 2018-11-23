@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Main {
-    //TODO: Inserir estados de erro na tabela SLR
     private static final String csvTable = "SLR/TabelaSLR.csv";
     private static final String csvProduction = "SLR/ProducoesSLR.csv";
 

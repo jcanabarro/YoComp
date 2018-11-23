@@ -134,6 +134,7 @@ class SyntacticAnalyzer {
         if (celula.equals("ERROR")) {
             List<String> list = get_expected_types(position);
             LOGGER.warning("Celula vazia, era esperado: " + String.valueOf(list) + " mas foi lido: " + name);
+            System.out.println("Celula vazia, era esperado: " + String.valueOf(list) + " mas foi lido: " + name);
             return null;
         }
         String[] res = new String[2];
@@ -151,6 +152,7 @@ class SyntacticAnalyzer {
             if (this.tabela.get(state)[index].equals("ERROR")) {
                 List<String> list = get_expected_types(state);
                 LOGGER.warning("celula vazia, era esperado: " + String.valueOf(list) + " mas foi lido: " + name);
+                System.out.println("celula vazia, era esperado: " + String.valueOf(list) + " mas foi lido: " + name);
                 return null;
             }
             return this.tabela.get(state)[index];

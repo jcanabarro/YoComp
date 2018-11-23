@@ -383,7 +383,9 @@ class SemanticAnalyzer {
         t_prod.setEnd(this.getLabelCounter(label_counter));
         code = t_prod.getBegin() + " : \n";
         code += "if " + token_statement.getCode() + " = false goto " + t_prod.getEnd() + "\n";
-        code += token_expr.getCode() + "\n" + "goto " + t_prod.getBegin() + "\n" + t_prod.getEnd() + " : ";
+        code += token_expr.getCode() + "\n" + "goto " + t_prod.getBegin() + "\n" + t_prod.getEnd() + " : \n";
+        if (!pilha.isEmpty())
+            code += pilha.pop().getCode();
         t_prod.setCode(code);
     }
 
@@ -411,6 +413,7 @@ class SemanticAnalyzer {
         pilha.pop();
         pilha.pop();
         expr = pilha.pop();
+        pilha.pop();
         String stop_condition = iter_var.getValue() + " " + op_relational.getCode() + " " + stop_value.getCode();
         t_prod.setBegin(this.getLabelCounter(label_counter));
         t_prod.setEnd(this.getLabelCounter(label_counter));
@@ -418,7 +421,9 @@ class SemanticAnalyzer {
         code += t_prod.getBegin() + " : \n";
         code += expr.getCode() + "\n";
         code += "if " + stop_condition + " = false goto " + t_prod.getEnd() + "\n";
-        code += unary_value.getCode() + "\n" + "goto " + t_prod.getBegin() + "\n" + t_prod.getEnd() + " : ";
+        code += unary_value.getCode() + "\n" + "goto " + t_prod.getBegin() + "\n" + t_prod.getEnd() + " : \n";
+        if (!pilha.isEmpty())
+            code += pilha.pop().getCode();
         t_prod.setCode(code);
     }
 
@@ -458,13 +463,15 @@ class SemanticAnalyzer {
         pilha.pop();
         pilha.pop();
         token_expr = pilha.pop();
+        pilha.pop();
         t_prod.setFalse_label(this.getLabelCounter(label_counter));
         code += "if " + token_statement.getCode() + " = false goto " + t_prod.getFalse_label() + "\n";
         code += token_expr.getCode() + "\n";
         code += t_prod.getFalse_label() + " : \n";
+        if (!pilha.isEmpty())
+            code += pilha.pop().getCode();
         t_prod.setCode(code);
     }
-
 
     private void formatIfElse(Stack<Token> pilha, Token t_prod, int[] label_counter) {
         Token token_statement;
@@ -480,6 +487,7 @@ class SemanticAnalyzer {
         pilha.pop();
         pilha.pop();
         token_else_expr = pilha.pop();
+        pilha.pop();
         t_prod.setTrue_label(this.getLabelCounter(label_counter));
         t_prod.setFalse_label(this.getLabelCounter(label_counter));
         String str_aux = this.getLabelCounter(label_counter);
@@ -489,6 +497,8 @@ class SemanticAnalyzer {
         code += t_prod.getFalse_label() + " : \n";
         code += token_else_expr.getCode() + "\n";
         code += str_aux + " : \n";
+        if (!pilha.isEmpty())
+            code += pilha.pop().getCode();
         t_prod.setCode(code);
     }
 
