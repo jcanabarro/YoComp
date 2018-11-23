@@ -2,7 +2,6 @@ package com.yo;
 
 import java.io.*;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class Main {
@@ -28,8 +27,9 @@ public class Main {
 
                 LexicalAnalyzer lexical = new LexicalAnalyzer(file, reservedWord, symbols, specialOperators);
                 List<Token> tokens = lexical.analyser();
-//                System.out.println(tokens.size());
+                System.out.println(tokens);
                 SyntacticAnalyzer syntactical = new SyntacticAnalyzer(csvTable, csvProduction);
+                System.out.println();
                 System.out.println(syntactical.Analyzer(tokens));
 
             } catch (IOException e) {

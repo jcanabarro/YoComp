@@ -63,6 +63,9 @@ class SemanticAnalyzer {
                 } else {
                     this.variable_declaration.add(token.getValue());
                     this.variable_type.add("later");
+                    if (!token_expr.getCode().equals("")){
+                        t_prod.setCode(token_expr.getCode());
+                    }
                 }
                 break;
             case 3:

@@ -2,9 +2,11 @@ yogod() {
 
     yoint a
     yoint i
+    yoint c
 
-    fon(i = 0; i < 20; i++){
-        holy(i < 10){
+
+    fon(a = 0; a < 20; a++){
+        holy(a < 10){
             eoq(a < 10){
                 a = 10 + 10
                 a = 25 + 10
