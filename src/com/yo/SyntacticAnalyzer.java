@@ -20,7 +20,8 @@ class SyntacticAnalyzer {
     private List<String> variable_declaration;
     private List<String> variable_type;
     private List<String> final_code;
-    private int label_counter;
+    private int[] label_counter;
+
 
 
     public SyntacticAnalyzer(String csvTable, String csvProd) throws IOException {
@@ -34,7 +35,8 @@ class SyntacticAnalyzer {
         this.variable_declaration = new ArrayList<>();
         this.variable_type = new ArrayList<>();
         this.final_code = new ArrayList<>();
-        this.label_counter = 0;
+        this.label_counter = new int[1];
+        this.label_counter[0] = 0;
         this.reversed_values = Arrays.asList("string", "char", "int", "float", "id");
         LOGGER.finest("Pilha foi inicializada");
         pushInt(0);
@@ -98,7 +100,7 @@ class SyntacticAnalyzer {
                     LOGGER.info("pilha auxiliar: "+ prodLog(pilha_aux.toString()));
 
                     // Here we apply the semantic analysis
-                    SemanticAnalyzer semantic = new SemanticAnalyzer(this.variable_declaration, this.variable_type, this.final_code, this.label_counter);
+                    SemanticAnalyzer semantic = new SemanticAnalyzer(this.variable_declaration, this.variable_type, this.final_code);
                     Token semanticToken;
                     semanticToken = semantic.codeGenerator(parser[1], prod, pilha_aux, this.final_code, this.label_counter);
 

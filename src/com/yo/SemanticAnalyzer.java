@@ -16,17 +16,15 @@ class SemanticAnalyzer {
     private List<String> variable_type;
     private List<String> final_code;
 
-    SemanticAnalyzer(List<String> variable_declaration, List<String> variable_type, List<String> final_code, int label_counter) {
+    SemanticAnalyzer(List<String> variable_declaration, List<String> variable_type, List<String> final_code) {
         this.code = "";
-        this.label_counter = label_counter;
         this.temp_counter = 0;
         this.variable_declaration = variable_declaration;
         this.variable_type = variable_type;
         this.final_code = final_code;
     }
 
-    Token codeGenerator(String s, String prod, Stack<Token> pilha, List<String> final_code, int label_counter) {
-        this.label_counter = label_counter;
+    Token codeGenerator(String s, String prod, Stack<Token> pilha, List<String> final_code, int[] label_counter) {
         Token t_prod = new Token("nao_terminal", prod);
         Token token;
         switch (Integer.valueOf(s)) {
@@ -165,19 +163,19 @@ class SemanticAnalyzer {
                 break;
             case 27: // IF
             case 28: // IF
-                formatIf(pilha, t_prod);
+                formatIf(pilha, t_prod, label_counter);
                 break;
             case 29: // IF ELSE
             case 30: // IF ELSE
-                formatIfElse(pilha, t_prod);
+                formatIfElse(pilha, t_prod, label_counter);
                 break;
             case 31: // WHILE
             case 32: // WHILE
-                formatWhile(pilha, t_prod);
+                formatWhile(pilha, t_prod, label_counter);
                 break;
             case 33: // FOR
             case 34: // FOR
-                formatFor(pilha, t_prod);
+                formatFor(pilha, t_prod, label_counter);
                 break;
             case 35: // SWITCH
             case 36: // SWITCH
@@ -256,7 +254,6 @@ class SemanticAnalyzer {
                 break;
         }
         final_code = this.final_code;
-        label_counter = this.label_counter;
         return t_prod;
     }
 
@@ -370,7 +367,7 @@ class SemanticAnalyzer {
         }
     }
 
-    private void formatWhile(Stack<Token> pilha, Token t_prod) {
+    private void formatWhile(Stack<Token> pilha, Token t_prod, int[] label_counter) {
         System.out.println(pilha);
         Token token_statement, token_expr;
         pilha.pop();
@@ -380,8 +377,8 @@ class SemanticAnalyzer {
         pilha.pop();
         token_expr = pilha.pop();
         pilha.pop();
-        t_prod.setBegin(this.getLabelCounter());
-        t_prod.setEnd(this.getLabelCounter());
+        t_prod.setBegin(this.getLabelCounter(label_counter));
+        t_prod.setEnd(this.getLabelCounter(label_counter));
         code = t_prod.getBegin() + " : \n";
         code += "if " + token_statement.getCode() + " = false goto " + t_prod.getEnd() + "\n";
         code += token_expr.getCode() + "\n" + "goto " + t_prod.getBegin() + "\n" + t_prod.getEnd() + " : ";
@@ -397,7 +394,7 @@ class SemanticAnalyzer {
         t_prod.setOperator(t_op.getValue());
     }
 
-    private void formatFor(Stack<Token> pilha, Token t_prod) {
+    private void formatFor(Stack<Token> pilha, Token t_prod, int[] label_counter) {
         Token iter_var, op_relational, stop_value, unary_value, expr;
         pilha.pop();
         pilha.pop();
@@ -414,8 +411,8 @@ class SemanticAnalyzer {
         pilha.pop();
         expr = pilha.pop();
         String stop_condition = iter_var.getValue() + " " + op_relational.getCode() + " " + stop_value.getCode();
-        t_prod.setBegin(this.getLabelCounter());
-        t_prod.setEnd(this.getLabelCounter());
+        t_prod.setBegin(this.getLabelCounter(label_counter));
+        t_prod.setEnd(this.getLabelCounter(label_counter));
         code = "";
         code += t_prod.getBegin() + " : \n";
         code += expr.getCode() + "\n";
@@ -454,7 +451,7 @@ class SemanticAnalyzer {
         this.final_code.add(t_prod.getCode());
     }
 
-    private void formatIf(Stack<Token> pilha, Token t_prod) {
+    private void formatIf(Stack<Token> pilha, Token t_prod, int[] label_counter) {
         Token token_statement, token_expr;
         pilha.pop();
         pilha.pop();
@@ -462,8 +459,7 @@ class SemanticAnalyzer {
         pilha.pop();
         pilha.pop();
         token_expr = pilha.pop();
-        t_prod.setTrue_label(this.getLabelCounter());
-        t_prod.setFalse_label(this.getLabelCounter());
+        t_prod.setFalse_label(this.getLabelCounter(label_counter));
         code += "if " + token_statement.getCode() + " = false goto " + t_prod.getFalse_label() + "\n";
         code += token_expr.getCode() + "\n";
         code += t_prod.getFalse_label() + " : \n";
@@ -472,7 +468,7 @@ class SemanticAnalyzer {
     }
 
 
-    private void formatIfElse(Stack<Token> pilha, Token t_prod) {
+    private void formatIfElse(Stack<Token> pilha, Token t_prod, int[] label_counter) {
         Token token_statement;
         Token token_expr;
         Token token_else_expr;
@@ -486,9 +482,9 @@ class SemanticAnalyzer {
         pilha.pop();
         pilha.pop();
         token_else_expr = pilha.pop();
-        t_prod.setTrue_label(this.getLabelCounter());
-        t_prod.setFalse_label(this.getLabelCounter());
-        String str_aux = this.getLabelCounter();
+        t_prod.setTrue_label(this.getLabelCounter(label_counter));
+        t_prod.setFalse_label(this.getLabelCounter(label_counter));
+        String str_aux = this.getLabelCounter(label_counter);
         code += "if " + token_statement.getCode() + " = false goto " + t_prod.getFalse_label() + "\n";
         code += token_expr.getCode() + "\n";
         code += "goto " + str_aux + "\n";
@@ -499,9 +495,9 @@ class SemanticAnalyzer {
         this.final_code.add(t_prod.getCode());
     }
 
-    private String getLabelCounter() {
-        label_counter++;
-        return "Label " + this.label_counter;
+    private String getLabelCounter(int[] label_counter) {
+        label_counter[0]++;
+        return "Label " + label_counter[0];
     }
 
     private String getTempCounter() {
