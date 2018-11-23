@@ -112,9 +112,9 @@ class SemanticAnalyzer {
                 } else {
                     this.variable_type.add(token.getType());
                 }
-                if (last_operation == null)
+                if (last_operation == null) {
                     t_prod.setCode(code);
-                else {
+                } else {
                     t_prod.setCode(code + "\n" + last_operation.getCode());
                     this.final_code.add(t_prod.getCode());
                 }
@@ -257,11 +257,6 @@ class SemanticAnalyzer {
         }
         final_code = this.final_code;
         label_counter = this.label_counter;
-//        if (!t_prod.getCode().equals("")) {
-//            System.out.println(t_prod.getCode());
-//            System.out.println();
-//        }
-
         return t_prod;
     }
 

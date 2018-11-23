@@ -3,6 +3,9 @@ yogod() {
     yoint a
     yoint b
 
+    a = 10 - 10
+    b = 10 + 10
+
     eoq(a < 10) {
         a = 10 - 10
         b = 10 + 10
