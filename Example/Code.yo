@@ -1,18 +1,18 @@
 yogod() {
 
     yoint a
+    yoint i
 
-    eoq(a < 10){
-        a = 1
-        a = 10 + 20
+    fon(i = 0; i < 20; i++){
+        holy(i < 10){
+            eoq(a < 10){
+                a = 10 + 10
+                a = 25 + 10
+            } trab {
+                scanfi(a)
+            }
+        }
     }
-
-    eoq(a < 10){
-        a = 1
-        a = 10 + 20
-    }
-
-    a = 10 + 20
 
 solado
 }

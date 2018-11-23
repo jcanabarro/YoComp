@@ -30,15 +30,8 @@ public class Main {
                 List<Token> tokens = lexical.analyser();
 //                System.out.println(tokens.size());
                 SyntacticAnalyzer syntactical = new SyntacticAnalyzer(csvTable, csvProduction);
-                List<String> code = syntactical.Analyzer(tokens);
-                if (!code.isEmpty()) {
-                    Collections.reverse(code);
-                    for (String aCode : code) {
-                        System.out.println(aCode);
-                    }
-                } else {
-                    System.out.println(false);
-                }
+                System.out.println(syntactical.Analyzer(tokens));
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
